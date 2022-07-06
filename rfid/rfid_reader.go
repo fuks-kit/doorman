@@ -43,6 +43,10 @@ func Reader(dev string) Device {
 	}
 }
 
+func (device Device) Close() (_ error) {
+	return device.Input.Close()
+}
+
 // StreamEvents streams parses and streams all inputs from Device.Input
 func (device Device) StreamEvents() <-chan InputEvent {
 	queue := make(chan InputEvent)
