@@ -92,9 +92,9 @@ func (device Device) StreamEvents() <-chan InputEvent {
 }
 
 // StreamIds assembles RFIDs from InputEvents.
-func (device Device) StreamIds() <-chan uint {
+func (device Device) StreamIds() <-chan uint32 {
 
-	queue := make(chan uint)
+	queue := make(chan uint32)
 
 	go func() {
 		for {
@@ -115,7 +115,7 @@ func (device Device) StreamIds() <-chan uint {
 					}
 
 					input = ""
-					queue <- uint(num)
+					queue <- uint32(num)
 
 					continue
 				}
