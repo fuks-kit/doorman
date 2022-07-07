@@ -12,7 +12,7 @@ import (
 )
 
 //
-// Constance are defined by:
+// Constants are defined by:
 // https://github.com/torvalds/linux/blob/master/include/uapi/linux/input-event-codes.h
 //
 
