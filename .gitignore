@@ -15,3 +15,8 @@
 # vendor/
 
 sensitive.txt
+token.json
+credentials.json
+
+dump/
+dump.*
