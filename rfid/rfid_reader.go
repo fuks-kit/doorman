@@ -47,8 +47,8 @@ func (device Device) Close() (_ error) {
 	return device.Input.Close()
 }
 
-// StreamEvents streams parses and streams all inputs from Device.Input
-func (device Device) StreamEvents() <-chan InputEvent {
+// ReadEvents streams parses and streams all inputs from Device.Input
+func (device Device) ReadEvents() <-chan InputEvent {
 	queue := make(chan InputEvent)
 
 	go func() {
@@ -91,8 +91,8 @@ func (device Device) StreamEvents() <-chan InputEvent {
 	return queue
 }
 
-// StreamIds assembles RFIDs from InputEvents.
-func (device Device) StreamIds() <-chan uint32 {
+// ReadIdentifiers assembles RFIDs from InputEvents.
+func (device Device) ReadIdentifiers() <-chan uint32 {
 
 	queue := make(chan uint32)
 
@@ -100,7 +100,7 @@ func (device Device) StreamIds() <-chan uint32 {
 		for {
 			var input string
 
-			for event := range device.StreamEvents() {
+			for event := range device.ReadEvents() {
 				// 'value' is the value the event carries. Either a relative change for
 				// EV_REL, absolute new value for EV_ABS (joysticks ...), or 0 for EV_KEY for
 				// release, 1 for keypress and 2 for autorepeat.

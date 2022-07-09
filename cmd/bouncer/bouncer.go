@@ -26,7 +26,7 @@ func main() {
 	}
 
 	device := rfid.Reader(devicePath)
-	for id := range device.StreamIds() {
+	for id := range device.ReadIdentifiers() {
 		log.Printf("id=0x%08x access=%t", id, access.CheckRFID(id))
 	}
 }

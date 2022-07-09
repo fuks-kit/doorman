@@ -26,7 +26,7 @@ func main() {
 	if dump {
 		log.Printf("dump all inputs")
 
-		for event := range device.StreamEvents() {
+		for event := range device.ReadEvents() {
 			out, _ := json.MarshalIndent(event, "", "  ")
 			log.Printf("%s", out)
 		}
@@ -34,7 +34,7 @@ func main() {
 		return
 	}
 
-	for id := range device.StreamIds() {
+	for id := range device.ReadIdentifiers() {
 		log.Printf("id=0x%08x (%d)", id, id)
 	}
 }
