@@ -8,10 +8,11 @@ import (
 	"google.golang.org/api/option"
 	"io/ioutil"
 	"log"
+	"strconv"
 )
 
 type customArguments struct {
-	ChipNumber uint64 `json:"Chipnummer_KIT_Card"`
+	ChipNumber string `json:"KIT_Card_Chipnummer"`
 }
 
 var adminService *admin.Service
@@ -123,20 +124,28 @@ func GetAuthorisedChipNumbers() (numbers []uint64) {
 
 	for _, user := range GetAllUsers() {
 		if schemeData, ok := user.CustomSchemas["fuks"]; ok {
+
+			// log.Printf("schemeData=%s", schemeData)
+
 			var customArgs customArguments
 			err := json.Unmarshal(schemeData, &customArgs)
 			if err != nil {
 				log.Fatalln(err)
 			}
 
+			chipNumber, err := strconv.ParseUint(customArgs.ChipNumber, 10, 64)
+			if err != nil {
+				log.Fatalf("couldn't parse '%s' to uint64", customArgs.ChipNumber)
+			}
+
 			log.Printf("FullName='%s' ChipNumber=%d activeMember=%v Zierahn=%v",
 				user.Name.FullName,
-				customArgs.ChipNumber,
+				chipNumber,
 				activeMember[user.Id],
 				user.Name.FamilyName == "Zierahn")
 
 			if activeMember[user.Id] || user.Name.FamilyName == "Zierahn" {
-				numbers = append(numbers, customArgs.ChipNumber)
+				numbers = append(numbers, chipNumber)
 			}
 		}
 	}
