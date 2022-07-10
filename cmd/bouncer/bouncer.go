@@ -5,15 +5,16 @@ import (
 	"doorwatch/rfid"
 	"flag"
 	"log"
+	"time"
 )
 
 var devicePath string
-var trustedId uint64
+var updateInterval time.Duration
 
 func init() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 	flag.StringVar(&devicePath, "i", "/dev/input/event1", "device input path")
-	flag.Uint64Var(&trustedId, "t", 0, "trusted chip number")
+	flag.DurationVar(&updateInterval, "u", time.Minute*10, "update time interval")
 	flag.Parse()
 }
 
@@ -21,12 +22,10 @@ func main() {
 
 	log.Printf("start reading and parsing input from %s", devicePath)
 
-	if trustedId > 0 {
-		access.AddRFID64(trustedId)
-	}
+	access.StartDBUpdater(updateInterval)
 
 	device := rfid.Reader(devicePath)
 	for id := range device.ReadIdentifiers() {
-		log.Printf("id=0x%08x access=%t", id, access.CheckRFID(id))
+		log.Printf("id=0x%08x access=%t", id, access.HasAccess(id))
 	}
 }

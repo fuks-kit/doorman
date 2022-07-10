@@ -1,15 +1,19 @@
 package main
 
 import (
-	"doorwatch/fuks"
+	"doorwatch/access"
 	"log"
+	"time"
 )
 
 func main() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 
+	access.StartDBUpdater(time.Second * 10)
+
+	time.Sleep(time.Minute)
 	//_ = access.GetAuthorisedChipNumbers()
 	//fuks.DumpGroupMembers()
-	numbers := fuks.GetAuthorisedChipNumbers()
-	log.Printf("numbers=%v", numbers)
+	//numbers := fuks.GetAuthorisedChipNumbers()
+	//log.Printf("numbers=%v", numbers)
 }
