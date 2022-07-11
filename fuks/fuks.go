@@ -129,6 +129,7 @@ func GetAuthorisedChipNumbers() (numbers []uint64) {
 			var customArgs customArguments
 			err := json.Unmarshal(schemeData, &customArgs)
 			if err != nil {
+				// TODO: Handle faulty user inputs in custom scheme without crashing.
 				log.Fatalln(err)
 			}
 
