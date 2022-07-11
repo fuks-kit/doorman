@@ -9,7 +9,7 @@ import (
 func main() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 
-	access.StartDBUpdater(time.Second * 10)
+	access.SetUpdateInterval(time.Second * 10)
 
 	time.Sleep(time.Minute)
 	//_ = access.GetAuthorisedChipNumbers()

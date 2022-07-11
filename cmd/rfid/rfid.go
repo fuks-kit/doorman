@@ -12,7 +12,7 @@ var dump bool
 
 func init() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
-	flag.StringVar(&devicePath, "i", "/dev/input/event1", "device input path")
+	flag.StringVar(&devicePath, "i", "/dev/input/event0", "device input path")
 	flag.BoolVar(&dump, "d", false, "dump all events from input device")
 	flag.Parse()
 }
