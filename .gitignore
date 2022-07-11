@@ -16,10 +16,13 @@
 
 sensitive.txt
 token.json
+
+# Don't checkin service account credentials!
 credentials.json
 
 dump/
 dump.*
+build/
 
 # go.sum file differ for each platform, os and arch
 go.sum
