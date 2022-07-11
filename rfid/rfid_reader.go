@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/binary"
 	"encoding/json"
-	"fmt"
 	"log"
 	"os"
 	"strconv"
@@ -150,7 +149,7 @@ func (device Device) ReadIdentifiers() <-chan uint32 {
 					log.Fatalf("Unknown event code %s", out)
 				}
 
-				input += fmt.Sprint(number)
+				input += number
 			}
 		}
 	}()
