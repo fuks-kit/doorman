@@ -8,8 +8,8 @@ import (
 
 func UpdateIdentifiers() {
 	log.Printf("Update authorised chip numbers")
-	numbers := fuks.GetAuthorisedChipNumbers()
-	SetDynamic(numbers)
+	users := fuks.GetAuthorisedUsers()
+	SetDynamic(users)
 }
 
 func SetUpdateInterval(interval time.Duration) {
