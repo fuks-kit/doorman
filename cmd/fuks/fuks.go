@@ -2,12 +2,21 @@ package main
 
 import (
 	"doorwatch/fuks"
+	"encoding/json"
+	"fmt"
 	"log"
 )
 
 func main() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 
-	numbers := fuks.GetAuthorisedChipNumbers()
-	log.Printf("numbers=%v", numbers)
+	fmt.Println("Authorised fuks users:")
+
+	authorisedUsers := fuks.GetAuthorisedUsers()
+	out, err := json.MarshalIndent(authorisedUsers, "", "  ")
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	fmt.Printf("%s\n", out)
 }

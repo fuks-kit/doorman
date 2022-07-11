@@ -21,6 +21,13 @@ type customArguments struct {
 	ChipNumber string `json:"KIT_Card_Chipnummer"`
 }
 
+type AuthorisedUsers struct {
+	Id         string `json:"id,omitempty"`
+	Name       string `json:"fullName,omitempty"`
+	Email      string `json:"email,omitempty"`
+	ChipNumber uint64 `json:"chipNumber,omitempty"`
+}
+
 func init() {
 	config, err := google.JWTConfigFromJSON(
 		credentials,
@@ -118,7 +125,9 @@ func GetAllUsers() (users []*admin.User) {
 	return
 }
 
-func GetAuthorisedChipNumbers() (numbers []uint64) {
+// GetAuthorisedUsers returns who have access to the fuks
+// office based on their membership in the "aktive" group.
+func GetAuthorisedUsers() (authUsers []AuthorisedUsers) {
 	activeMember := GetActiveMemberIds()
 
 	for _, user := range GetAllUsers() {
@@ -138,16 +147,33 @@ func GetAuthorisedChipNumbers() (numbers []uint64) {
 				log.Fatalf("couldn't parse '%s' to uint64", customArgs.ChipNumber)
 			}
 
-			log.Printf("FullName='%s' ChipNumber=%d activeMember=%v Zierahn=%v",
-				user.Name.FullName,
-				chipNumber,
-				activeMember[user.Id],
-				user.Name.FamilyName == "Zierahn")
+			//log.Printf("FullName='%s' ChipNumber=%d activeMember=%v Zierahn=%v",
+			//	user.Name.FullName,
+			//	chipNumber,
+			//	activeMember[user.Id],
+			//	user.Name.FamilyName == "Zierahn")
 
 			if activeMember[user.Id] || user.Name.FamilyName == "Zierahn" {
-				numbers = append(numbers, chipNumber)
+				authUser := AuthorisedUsers{
+					Id:         user.Id,
+					Name:       user.Name.FullName,
+					Email:      user.PrimaryEmail,
+					ChipNumber: chipNumber,
+				}
+
+				authUsers = append(authUsers, authUser)
 			}
 		}
+	}
+
+	return
+}
+
+func GetAuthorisedChipNumbers() (numbers []uint64) {
+	authorisedUsers := GetAuthorisedUsers()
+
+	for _, user := range authorisedUsers {
+		numbers = append(numbers, user.ChipNumber)
 	}
 
 	return
