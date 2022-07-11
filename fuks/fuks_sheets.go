@@ -3,6 +3,7 @@ package fuks
 import (
 	"log"
 	"strconv"
+	"strings"
 )
 
 func GetAuthorisedChipNumbersFromSheet(spreadsheetId string) (authUsers []AuthorisedUser) {
@@ -35,7 +36,12 @@ func GetAuthorisedChipNumbersFromSheet(spreadsheetId string) (authUsers []Author
 		}
 
 		name, ok := val[1].(string)
-		if !ok || name == "" {
+		if !ok {
+			continue
+		}
+
+		name = strings.TrimSpace(name)
+		if name == "" {
 			continue
 		}
 
