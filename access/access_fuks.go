@@ -7,14 +7,14 @@ import (
 )
 
 func UpdateIdentifiers() {
-	log.Printf("update authorised chip numbers")
+	log.Printf("Update authorised chip numbers")
 	numbers := fuks.GetAuthorisedChipNumbers()
 	SetDynamic(numbers)
 }
 
 func SetUpdateInterval(interval time.Duration) {
 
-	log.Printf("start fuks chipnumbers updater")
+	// Fetch init data
 	UpdateIdentifiers()
 
 	go func() {

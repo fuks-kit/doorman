@@ -16,26 +16,30 @@ var duration time.Duration
 func init() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 
-	flag.StringVar(&devicePath, "i", "/dev/input/event0", "device input path")
-	flag.DurationVar(&interval, "u", time.Minute*10, "update interval for chip-number access database")
-	flag.DurationVar(&duration, "t", time.Second*6, "how long the door should be open")
+	flag.StringVar(&devicePath, "i", "/dev/input/event0", "RFID reader path")
+	flag.DurationVar(&interval, "u", time.Minute*10, "Update interval for the chip number database")
+	flag.DurationVar(&duration, "t", time.Second*6, "Length of time the door should be open")
 	flag.Parse()
 }
 
 func main() {
 
-	log.Printf("Doorman started")
+	log.Printf("Doorman initialising...")
 
 	access.SetUpdateInterval(interval)
 
-	log.Printf("reading keyboard events from %s", devicePath)
-
+	log.Printf("Listening for RFID events (%s)", devicePath)
 	device := rfid.Reader(devicePath)
-	for id := range device.ReadIdentifiers() {
-		hasAccess := access.HasAccess(id)
-		log.Printf("id=0x%08x hasAccess=%t", id, hasAccess)
 
-		if hasAccess {
+	log.Printf("----------------------------")
+	log.Printf("Doorman is ready")
+	log.Printf("----------------------------")
+
+	for id := range device.ReadIdentifiers() {
+		openDoor := access.HasAccess(id)
+		log.Printf("Access event: RFID=0x%08x openDoor=%t", id, openDoor)
+
+		if openDoor {
 			door.Open(duration)
 		}
 	}
