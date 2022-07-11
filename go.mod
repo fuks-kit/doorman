@@ -14,6 +14,7 @@ require (
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.1.0 // indirect
 	github.com/googleapis/gax-go/v2 v2.4.0 // indirect
+	github.com/stianeikeland/go-rpio v3.0.0+incompatible // indirect
 	go.opencensus.io v0.23.0 // indirect
 	golang.org/x/net v0.0.0-20220706163947-c90051bbdb60 // indirect
 	golang.org/x/sys v0.0.0-20220708085239-5a0f0661e09d // indirect
