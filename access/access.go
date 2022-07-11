@@ -8,7 +8,7 @@ import (
 
 var lock sync.RWMutex
 
-var authorised = make(map[uint32]fuks.AuthorisedUsers)
+var authorised = make(map[uint32]fuks.AuthorisedUser)
 
 func HasAccess(id uint32) (access bool, name string) {
 	lock.RLock()
@@ -19,11 +19,11 @@ func HasAccess(id uint32) (access bool, name string) {
 	return access, user.Name
 }
 
-func SetDynamic(list []fuks.AuthorisedUsers) {
+func SetDynamic(list []fuks.AuthorisedUser) {
 	lock.Lock()
 	defer lock.Unlock()
 
-	authorised = make(map[uint32]fuks.AuthorisedUsers)
+	authorised = make(map[uint32]fuks.AuthorisedUser)
 
 	for _, user := range list {
 		trimmedTag := rfid.TrimTag(user.ChipNumber)
