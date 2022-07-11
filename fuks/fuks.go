@@ -2,6 +2,7 @@ package fuks
 
 import (
 	"context"
+	_ "embed"
 	"encoding/json"
 	"golang.org/x/oauth2/google"
 	admin "google.golang.org/api/admin/directory/v1"
@@ -11,18 +12,16 @@ import (
 	"strconv"
 )
 
+//go:embed credentials.json
+var credentials []byte
+
+var adminService *admin.Service
+
 type customArguments struct {
 	ChipNumber string `json:"KIT_Card_Chipnummer"`
 }
 
-var adminService *admin.Service
-
 func init() {
-	credentials, err := ioutil.ReadFile("credentials.json")
-	if err != nil {
-		log.Fatalln(err)
-	}
-
 	config, err := google.JWTConfigFromJSON(
 		credentials,
 		admin.AdminDirectoryUserScope,
