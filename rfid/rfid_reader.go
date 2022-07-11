@@ -110,7 +110,14 @@ func (device Device) ReadIdentifiers() <-chan uint32 {
 				if event.Code == keyEnter {
 					num, err := strconv.ParseUint(input, 10, 64)
 					if err != nil {
-						log.Fatalln(err)
+						//
+						// Then too many events are triggered the input can be corrupted.
+						// In this case reset the input and continue.
+						//
+
+						// log.Printf("error parsing input number: %v", err)
+						input = ""
+						continue
 					}
 
 					input = ""
