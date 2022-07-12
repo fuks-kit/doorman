@@ -13,6 +13,7 @@ var (
 	devicePath = flag.String("i", "/dev/input/event0", "RFID reader path")
 	interval   = flag.Duration("u", time.Minute*10, "Update interval for the chip-number database")
 	duration   = flag.Duration("t", time.Second*6, "Length of time the door should be open")
+	accessPath = flag.String("a", "", "Path to json with RFID codes that always have access.")
 )
 
 func init() {
@@ -23,6 +24,10 @@ func init() {
 func main() {
 
 	log.Printf("Doorman initialising...")
+
+	if *accessPath != "" {
+		access.SourceOfficeAccessJson(*accessPath)
+	}
 
 	access.SetUpdateInterval(*interval)
 
@@ -36,8 +41,8 @@ func main() {
 	for id := range device.ReadIdentifiers() {
 		log.Printf("Access event: RFID=0x%08x", id)
 
-		if ok, name := access.HasAccess(id); ok {
-			log.Printf("Open door for %s (0x%08x)", name, id)
+		if user, ok := access.HasAccess(id); ok {
+			log.Printf("Open door for %s (0x%08x)", user.GetLogName(), id)
 			door.Open(*duration)
 		}
 	}

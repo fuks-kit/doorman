@@ -12,13 +12,6 @@ type customArguments struct {
 	ChipNumber string `json:"KIT_Card_Chipnummer"`
 }
 
-type AuthorisedUser struct {
-	Id           string `json:"id,omitempty"`
-	Name         string `json:"name,omitempty"`
-	ChipNumber   uint64 `json:"chipNumber,omitempty"`
-	Organization string `json:"organization,omitempty"`
-}
-
 func GetActiveMemberIds() (memberIds map[string]bool) {
 	members, err := adminService.Members.List("aktive@fuks.org").Do()
 	if err != nil {
