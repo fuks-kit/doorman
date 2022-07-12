@@ -18,8 +18,8 @@ ExecStartPre=/bin/mkdir -p /var/log/doorman
 ExecStartPre=/bin/chown root:root /var/log/doorman
 ExecStartPre=/bin/chmod 755 /var/log/doorman
 
-StandardOutput=file:/var/log/doorman/doorman.log
-StandardError=file:/var/log/doorman/doorman.log
+StandardOutput=append:/var/log/doorman/doorman.log
+StandardError=append:/var/log/doorman/doorman.log
 
 [Install]
 WantedBy=multi-user.target
