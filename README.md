@@ -15,7 +15,7 @@ https://www.googleapis.com/auth/admin.directory.group.member,
 https://www.googleapis.com/auth/spreadsheets.readonly
 ````
 
-Follow the instructions [here](https://developers.google.com/workspace/guides/create-credentials#service-account) to
+Follow the instructions [here](https://developers.google.com/workspace/guides/create-credentials#create_credentials_for_a_service_account) to
 create a new credentials.json.
 The generated JSON must be placed under ```fuks/credentials.json``` and will be included in the compiled GO executable.
 
