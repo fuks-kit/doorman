@@ -23,6 +23,7 @@ credentials.json
 dump/
 dump.*
 build/
+bin/
 
 cmd/debug/debug.go
 
