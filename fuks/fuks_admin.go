@@ -13,9 +13,10 @@ type customArguments struct {
 }
 
 type AuthorisedUser struct {
-	Id         string `json:"id,omitempty"`
-	Name       string `json:"name,omitempty"`
-	ChipNumber uint64 `json:"chipNumber,omitempty"`
+	Id           string `json:"id,omitempty"`
+	Name         string `json:"name,omitempty"`
+	ChipNumber   uint64 `json:"chipNumber,omitempty"`
+	Organization string `json:"organization,omitempty"`
 }
 
 func GetActiveMemberIds() (memberIds map[string]bool) {
@@ -98,9 +99,10 @@ func GetAuthorisedUsers() (authUsers []AuthorisedUser, _ error) {
 
 			if activeMember[user.Id] || user.Name.FamilyName == "Zierahn" {
 				authUser := AuthorisedUser{
-					Id:         user.Id,
-					Name:       user.Name.FullName,
-					ChipNumber: chipNumber,
+					Id:           user.Id,
+					Name:         user.Name.FullName,
+					ChipNumber:   chipNumber,
+					Organization: "fuks",
 				}
 
 				authUsers = append(authUsers, authUser)

@@ -1,6 +1,7 @@
 package access
 
 import (
+	"fmt"
 	"github.com/fuks-kit/doorman/fuks"
 	"github.com/fuks-kit/doorman/rfid"
 	"sync"
@@ -16,7 +17,7 @@ func HasAccess(id uint32) (access bool, name string) {
 
 	user, access := authorised[id]
 
-	return access, user.Name
+	return access, fmt.Sprintf("%s (%s)", user.Name, user.Organization)
 }
 
 func SetDynamic(list []fuks.AuthorisedUser) {

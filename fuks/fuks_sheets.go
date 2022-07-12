@@ -8,7 +8,7 @@ import (
 
 func GetAuthorisedUsersFromSheet() (users []AuthorisedUser, _ error) {
 	sheetId := "1eNZxLDzBPZDZ5JKI47ZoUlw8pB6C--7MQiRBxspO4EI"
-	readRange := "A2:B"
+	readRange := "A2:C"
 
 	resp, err := sheetsService.
 		Spreadsheets.
@@ -22,7 +22,7 @@ func GetAuthorisedUsersFromSheet() (users []AuthorisedUser, _ error) {
 	//log.Printf("resp=%s", simple.PrettifyMarshaler(resp))
 
 	for _, val := range resp.Values {
-		if len(val) != 2 {
+		if len(val) != 3 {
 			continue
 		}
 
@@ -46,9 +46,20 @@ func GetAuthorisedUsersFromSheet() (users []AuthorisedUser, _ error) {
 			continue
 		}
 
+		org, ok := val[2].(string)
+		if !ok {
+			continue
+		}
+
+		org = strings.TrimSpace(org)
+		if org == "" {
+			continue
+		}
+
 		authUser := AuthorisedUser{
-			Name:       name,
-			ChipNumber: chipNumber,
+			Name:         name,
+			ChipNumber:   chipNumber,
+			Organization: org,
 		}
 
 		users = append(users, authUser)
