@@ -1,6 +1,6 @@
 # Fuks Doorman System
 
-The purpose of the Fuks Doorman System is to allow fuks members access to the fuks office
+The purpose of the Fuks Doorman system is to allow fuks members access to the fuks office
 by using RFID tags in student ID cards.
 
 The system is assembled out of a Raspberry Pi, an RFID reader, a relay module and an electronic door opener.
