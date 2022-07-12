@@ -12,7 +12,11 @@ func main() {
 
 	fmt.Println("Authorised fuks users:")
 
-	authorisedUsers := fuks.GetAuthorisedUsers()
+	authorisedUsers, err := fuks.GetAuthorisedUsers()
+	if err != nil {
+		log.Fatalln(err)
+	}
+
 	out, err := json.MarshalIndent(authorisedUsers, "", "  ")
 	if err != nil {
 		log.Fatalln(err)
@@ -22,7 +26,11 @@ func main() {
 	fmt.Println("Authorised externals:")
 
 	spreadsheetId := "1eNZxLDzBPZDZ5JKI47ZoUlw8pB6C--7MQiRBxspO4EI"
-	authorisedUsers = fuks.GetAuthorisedChipNumbersFromSheet(spreadsheetId)
+	authorisedUsers, err = fuks.GetAuthorisedUsersFromSheet(spreadsheetId)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
 	out, err = json.MarshalIndent(authorisedUsers, "", "  ")
 	if err != nil {
 		log.Fatalln(err)

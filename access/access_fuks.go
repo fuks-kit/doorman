@@ -8,8 +8,12 @@ import (
 
 func UpdateIdentifiers() {
 	log.Printf("Update authorised chip numbers")
-	users := fuks.GetAuthorisedUsers()
-	SetDynamic(users)
+
+	if users, err := fuks.GetAuthorisedUsers(); err == nil {
+		SetDynamic(users)
+	} else {
+		log.Printf("Couldn't update authorised chip numbers: %v", err)
+	}
 }
 
 func SetUpdateInterval(interval time.Duration) {

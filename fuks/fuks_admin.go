@@ -2,8 +2,8 @@ package fuks
 
 import (
 	"encoding/json"
+	"fmt"
 	admin "google.golang.org/api/admin/directory/v1"
-	"io/ioutil"
 	"log"
 	"strconv"
 )
@@ -16,35 +16,6 @@ type AuthorisedUser struct {
 	Id         string `json:"id,omitempty"`
 	Name       string `json:"name,omitempty"`
 	ChipNumber uint64 `json:"chipNumber,omitempty"`
-}
-
-func DumpGroups() {
-	groups, err := adminService.Groups.
-		List().
-		Domain("fuks.org").
-		MaxResults(500).
-		Do()
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	byt, _ := json.MarshalIndent(groups, "", "  ")
-	err = ioutil.WriteFile("dump.groups.json", byt, 0644)
-	if err != nil {
-		log.Fatalln(err)
-	}
-}
-
-func DumpGroupMembers() {
-	members, err := adminService.Members.
-		List("aktive@fuks.org").
-		MaxResults(500).
-		Do()
-	byt, _ := json.MarshalIndent(members, "", "  ")
-	err = ioutil.WriteFile("dump.members.json", byt, 0644)
-	if err != nil {
-		log.Fatalln(err)
-	}
 }
 
 func GetActiveMemberIds() (memberIds map[string]bool) {
@@ -62,7 +33,7 @@ func GetActiveMemberIds() (memberIds map[string]bool) {
 	return
 }
 
-func GetAllUsers() (users []*admin.User) {
+func GetAllUsers() (users []*admin.User, _ error) {
 	var nextPageToken string
 
 	for {
@@ -75,14 +46,10 @@ func GetAllUsers() (users []*admin.User) {
 			PageToken(nextPageToken).
 			Do()
 		if err != nil {
-			log.Fatalf("Unable to retrieve users in domain: %v", err)
+			return nil, fmt.Errorf("unable to retrieve users in domain: %v", err)
 		}
 
 		nextPageToken = results.NextPageToken
-
-		if len(results.Users) == 0 {
-			log.Fatalln("No users found.")
-		}
 
 		users = append(users, results.Users...)
 
@@ -94,12 +61,17 @@ func GetAllUsers() (users []*admin.User) {
 	return
 }
 
-// GetAuthorisedUsers returns who have access to the fuks
+// GetAuthorisedUsers returns users who have access to the fuks
 // office based on their membership in the "aktive" group.
-func GetAuthorisedUsers() (authUsers []AuthorisedUser) {
+func GetAuthorisedUsers() (authUsers []AuthorisedUser, _ error) {
 	activeMember := GetActiveMemberIds()
 
-	for _, user := range GetAllUsers() {
+	users, err := GetAllUsers()
+	if err != nil {
+		return nil, err
+	}
+
+	for _, user := range users {
 		if schemeData, ok := user.CustomSchemas["fuks"]; ok {
 
 			// log.Printf("schemeData=%s", schemeData)
@@ -107,13 +79,15 @@ func GetAuthorisedUsers() (authUsers []AuthorisedUser) {
 			var customArgs customArguments
 			err := json.Unmarshal(schemeData, &customArgs)
 			if err != nil {
-				// TODO: Handle faulty user inputs in custom scheme without crashing.
-				log.Fatalln(err)
+				log.Printf("Error parsing custom user arguments: user.Id=%s schemeData=%s",
+					user.Id, schemeData)
+				continue
 			}
 
 			chipNumber, err := strconv.ParseUint(customArgs.ChipNumber, 10, 64)
 			if err != nil {
-				log.Fatalf("couldn't parse '%s' to uint64", customArgs.ChipNumber)
+				log.Printf("Couldn't parse '%s' to uint64: user.Id=%s", customArgs.ChipNumber, user.Id)
+				continue
 			}
 
 			//log.Printf("FullName='%s' ChipNumber=%d activeMember=%v Zierahn=%v",
@@ -132,16 +106,6 @@ func GetAuthorisedUsers() (authUsers []AuthorisedUser) {
 				authUsers = append(authUsers, authUser)
 			}
 		}
-	}
-
-	return
-}
-
-func GetAuthorisedChipNumbers() (numbers []uint64) {
-	authorisedUsers := GetAuthorisedUsers()
-
-	for _, user := range authorisedUsers {
-		numbers = append(numbers, user.ChipNumber)
 	}
 
 	return

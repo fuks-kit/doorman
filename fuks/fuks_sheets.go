@@ -1,21 +1,21 @@
 package fuks
 
 import (
-	"log"
+	"fmt"
 	"strconv"
 	"strings"
 )
 
-func GetAuthorisedChipNumbersFromSheet(spreadsheetId string) (authUsers []AuthorisedUser) {
+func GetAuthorisedUsersFromSheet(sheetId string) (users []AuthorisedUser, _ error) {
 	readRange := "A2:B"
 
 	resp, err := sheetsService.
 		Spreadsheets.
 		Values.
-		Get(spreadsheetId, readRange).
+		Get(sheetId, readRange).
 		Do()
 	if err != nil {
-		log.Fatalf("Unable to retrieve data from sheet: %v", err)
+		return nil, fmt.Errorf("unable to retrieve data from sheet: sheetId=%s error=%v", sheetId, err)
 	}
 
 	//log.Printf("resp=%s", simple.PrettifyMarshaler(resp))
@@ -50,7 +50,7 @@ func GetAuthorisedChipNumbersFromSheet(spreadsheetId string) (authUsers []Author
 			ChipNumber: chipNumber,
 		}
 
-		authUsers = append(authUsers, authUser)
+		users = append(users, authUser)
 	}
 
 	return
