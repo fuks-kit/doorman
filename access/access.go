@@ -39,7 +39,7 @@ func SetDynamic(list []fuks.AuthorisedUser) {
 }
 
 func SourceOfficeAccessJson(path string) {
-	log.Printf("Sourcing local office access file...")
+	log.Printf("Sourcing offline access file...")
 
 	byt, err := ioutil.ReadFile(path)
 	if err != nil {
