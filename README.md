@@ -38,7 +38,7 @@ go install cmd/rfid/rfid.go
 go install cmd/door/door.go
 ```
 
-## Create new linux service
+## Create doorman service
 
 ```shell
 sudo cp doorman.service /etc/systemd/system/
