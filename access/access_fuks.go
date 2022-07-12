@@ -9,11 +9,21 @@ import (
 func UpdateIdentifiers() {
 	log.Printf("Update authorised chip numbers")
 
-	if users, err := fuks.GetAuthorisedUsers(); err == nil {
-		SetDynamic(users)
+	var users []fuks.AuthorisedUser
+
+	if fuksUsers, err := fuks.GetAuthorisedUsers(); err == nil {
+		users = append(users, fuksUsers...)
 	} else {
-		log.Printf("Couldn't update authorised chip numbers: %v", err)
+		log.Printf("Couldn't update authorised chip numbers from userdata: %v", err)
 	}
+
+	if sheetUsers, err := fuks.GetAuthorisedUsersFromSheet(); err == nil {
+		users = append(users, sheetUsers...)
+	} else {
+		log.Printf("Couldn't update authorised chip numbers from sheet: %v", err)
+	}
+
+	SetDynamic(users)
 }
 
 func SetUpdateInterval(interval time.Duration) {
