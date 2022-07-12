@@ -1,5 +1,13 @@
 # Fuks Doorman System
 
+## Create new service
+
+```shell
+sudo cp doorman.service /etc/systemd/system/;
+sudo systemctl daemon-reload;
+sudo service doorman start;
+```
+
 ## Setup Google Workspace credentials
 
 TODO

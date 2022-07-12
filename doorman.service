@@ -1,0 +1,25 @@
+[Unit]
+Description=Doorman Go Service
+ConditionPathExists=/home/fuks
+After=network.target
+
+[Service]
+Type=simple
+User=root
+Group=root
+
+WorkingDirectory=/home/fuks
+ExecStart=/home/fuks/go/bin/doorman
+
+Restart=on-failure
+RestartSec=10
+
+ExecStartPre=/bin/mkdir -p /var/log/doorman
+ExecStartPre=/bin/chown root:root /var/log/doorman
+ExecStartPre=/bin/chmod 755 /var/log/doorman
+
+StandardOutput=file:/var/log/doorman/doorman.log
+StandardError=file:/var/log/doorman/doorman.log
+
+[Install]
+WantedBy=multi-user.target
