@@ -1,9 +1,9 @@
 package main
 
 import (
-	"doorwatch/fuks"
 	"encoding/json"
 	"fmt"
+	"github.com/fuks-kit/doorman/fuks"
 	"log"
 )
 

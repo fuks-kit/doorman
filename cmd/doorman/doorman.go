@@ -1,10 +1,10 @@
 package main
 
 import (
-	"doorwatch/access"
-	"doorwatch/door"
-	"doorwatch/rfid"
 	"flag"
+	"github.com/fuks-kit/doorman/access"
+	"github.com/fuks-kit/doorman/door"
+	"github.com/fuks-kit/doorman/rfid"
 	"log"
 	"time"
 )

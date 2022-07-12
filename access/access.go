@@ -1,8 +1,8 @@
 package access
 
 import (
-	"doorwatch/fuks"
-	"doorwatch/rfid"
+	"github.com/fuks-kit/doorman/fuks"
+	"github.com/fuks-kit/doorman/rfid"
 	"sync"
 )
 

@@ -1,8 +1,8 @@
 package main
 
 import (
-	"doorwatch/door"
 	"flag"
+	"github.com/fuks-kit/doorman/door"
 	"log"
 	"time"
 )

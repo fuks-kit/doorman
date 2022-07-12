@@ -1,4 +1,4 @@
-module doorwatch
+module github.com/fuks-kit/doorman
 
 go 1.18
 

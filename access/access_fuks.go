@@ -1,7 +1,7 @@
 package access
 
 import (
-	"doorwatch/fuks"
+	"github.com/fuks-kit/doorman/fuks"
 	"log"
 	"time"
 )

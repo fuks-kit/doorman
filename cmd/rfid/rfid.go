@@ -1,9 +1,9 @@
 package main
 
 import (
-	"doorwatch/rfid"
 	"encoding/json"
 	"flag"
+	"github.com/fuks-kit/doorman/rfid"
 	"log"
 )
 

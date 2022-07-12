@@ -1,7 +1,7 @@
 package main
 
 import (
-	"doorwatch/access"
+	"github.com/fuks-kit/doorman/access"
 	"log"
 	"time"
 )
