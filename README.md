@@ -8,6 +8,8 @@ sudo systemctl daemon-reload;
 sudo service doorman start;
 ```
 
+Run ```sudo systemctl enable doorman``` to start the doorman service on startup
+
 ## Setup Google Workspace credentials
 
 TODO
