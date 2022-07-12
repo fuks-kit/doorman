@@ -7,13 +7,13 @@ import (
 	"log"
 )
 
-var devicePath string
-var dump bool
+var (
+	devicePath = flag.String("i", "/dev/input/event0", "Input path of the RFID reader")
+	dump       = flag.Bool("v", false, "Verbose logging")
+)
 
 func init() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
-	flag.StringVar(&devicePath, "i", "/dev/input/event0", "device input path")
-	flag.BoolVar(&dump, "d", false, "dump all events from input device")
 	flag.Parse()
 }
 
@@ -21,9 +21,9 @@ func main() {
 
 	log.Printf("start reading and parsing input from %s", devicePath)
 
-	device := rfid.Reader(devicePath)
+	device := rfid.Reader(*devicePath)
 
-	if dump {
+	if *dump {
 		log.Printf("dump all inputs")
 
 		for event := range device.ReadEvents() {

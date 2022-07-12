@@ -7,14 +7,15 @@ import (
 	"time"
 )
 
-var duration time.Duration
+var (
+	duration = flag.Duration("d", time.Second*6, "Duration the door should open")
+)
 
 func init() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
-	flag.DurationVar(&duration, "t", time.Second*6, "how long the door should be open")
 	flag.Parse()
 }
 
 func main() {
-	door.Open(duration)
+	door.Open(*duration)
 }
