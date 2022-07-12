@@ -38,6 +38,8 @@ go install cmd/rfid/rfid.go
 go install cmd/door/door.go
 ```
 
+> Note: Add ```export PATH=$PATH:$HOME/go/bin/``` to ```.bashrc```
+
 ## Create doorman service
 
 ```shell
