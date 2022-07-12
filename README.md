@@ -1,11 +1,19 @@
 # Fuks Doorman System
 
+## Install doorman cli
+
+```shell
+go install cmd/doorman/doorman.go
+go install cmd/rfid/rfid.go
+go install cmd/door/door.go
+```
+
 ## Create new service
 
 ```shell
-sudo cp doorman.service /etc/systemd/system/;
-sudo systemctl daemon-reload;
-sudo service doorman start;
+sudo cp doorman.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo service doorman start
 ```
 
 Run ```sudo systemctl enable doorman``` to start the doorman service on startup
