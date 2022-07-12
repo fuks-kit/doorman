@@ -25,8 +25,7 @@ func main() {
 
 	fmt.Println("Authorised externals:")
 
-	spreadsheetId := "1eNZxLDzBPZDZ5JKI47ZoUlw8pB6C--7MQiRBxspO4EI"
-	authorisedUsers, err = fuks.GetAuthorisedUsersFromSheet(spreadsheetId)
+	authorisedUsers, err = fuks.GetAuthorisedUsersFromSheet()
 	if err != nil {
 		log.Fatalln(err)
 	}

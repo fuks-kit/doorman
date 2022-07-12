@@ -6,7 +6,8 @@ import (
 	"strings"
 )
 
-func GetAuthorisedUsersFromSheet(sheetId string) (users []AuthorisedUser, _ error) {
+func GetAuthorisedUsersFromSheet() (users []AuthorisedUser, _ error) {
+	sheetId := "1eNZxLDzBPZDZ5JKI47ZoUlw8pB6C--7MQiRBxspO4EI"
 	readRange := "A2:B"
 
 	resp, err := sheetsService.
