@@ -26,9 +26,10 @@ https://www.googleapis.com/auth/spreadsheets.readonly
 
 Follow the
 instructions [here](https://developers.google.com/workspace/guides/create-credentials#create_credentials_for_a_service_account)
-to
-create a new credentials.json.
+to create a new credentials.json.
 The generated JSON must be placed under ```fuks/credentials.json``` and will be included in the compiled GO executable.
+
+> Note that you might need to update **config.Subject** email value in the ````fuks/fuks.go````
 
 ## Compile and install Doorman CLI
 
