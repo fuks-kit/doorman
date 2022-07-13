@@ -19,7 +19,7 @@ func init() {
 
 func main() {
 
-	log.Printf("start reading and parsing input from %s", devicePath)
+	log.Printf("start reading and parsing input from %s", *devicePath)
 
 	device := rfid.Reader(*devicePath)
 
