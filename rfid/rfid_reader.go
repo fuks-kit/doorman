@@ -52,38 +52,30 @@ func (device Device) ReadEvents() <-chan InputEvent {
 	queue := make(chan InputEvent, 16)
 
 	go func() {
-		for {
-			events := make([]InputEvent, 16)
-			buffer := make([]byte, int(unsafe.Sizeof(InputEvent{}))*16)
+		buffer := make([]byte, int(unsafe.Sizeof(InputEvent{})))
 
-			r, err := device.Input.Read(buffer)
+		for {
+			_, err := device.Input.Read(buffer)
 			if err != nil {
 				log.Fatalln(err)
 			}
-
-			log.Printf("read=%d", r)
 
 			//
 			// For help see:
 			// https://www.kernel.org/doc/Documentation/input/input.txt
 			//
 
-			b := bytes.NewBuffer(buffer)
-			err = binary.Read(b, binary.LittleEndian, &events)
+			var event InputEvent
+			err = binary.Read(
+				bytes.NewBuffer(buffer),
+				binary.LittleEndian,
+				&event,
+			)
 			if err != nil {
 				log.Fatalln(err)
 			}
 
-			for inx, event := range events {
-				log.Printf("inx=%d event=%v", inx, event)
-
-				// skip trailing structures
-				if event.Time.Sec == 0 {
-					break
-				}
-
-				queue <- event
-			}
+			queue <- event
 		}
 	}()
 
