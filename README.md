@@ -34,6 +34,8 @@ The generated JSON must be placed under ```fuks/credentials.json``` and will be 
 ## Compile and install Doorman CLI
 
 ```shell
+go get all
+
 go install cmd/doorman/doorman.go
 go install cmd/rfid/rfid.go
 go install cmd/door/door.go
