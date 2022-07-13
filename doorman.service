@@ -5,8 +5,8 @@ After=network.target
 
 [Service]
 Type=simple
-User=root
-Group=root
+User=fuks
+Group=fuks
 
 WorkingDirectory=/home/fuks
 ExecStart=/home/fuks/go/bin/doorman
@@ -14,12 +14,8 @@ ExecStart=/home/fuks/go/bin/doorman
 Restart=on-failure
 RestartSec=10
 
-ExecStartPre=/bin/mkdir -p /var/log/doorman
-ExecStartPre=/bin/chown root:root /var/log/doorman
-ExecStartPre=/bin/chmod 755 /var/log/doorman
-
-StandardOutput=append:/var/log/doorman/doorman.log
-StandardError=append:/var/log/doorman/doorman.log
+StandardOutput=append:/var/log/doorman.log
+StandardError=append:/var/log/doorman.log
 
 [Install]
 WantedBy=multi-user.target
