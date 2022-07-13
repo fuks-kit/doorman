@@ -7,7 +7,8 @@ import (
 	"log"
 	"os"
 	"strconv"
-	"time"
+	"syscall"
+	"unsafe"
 )
 
 //
@@ -21,10 +22,10 @@ const (
 )
 
 type InputEvent struct {
-	Time  time.Time `json:"time"`
-	Type  uint16    `json:"type"`
-	Code  uint16    `json:"code"`
-	Value int32     `json:"value"`
+	Time  syscall.Timeval // time in seconds since epoch at which event occurred
+	Type  uint16          // event type - one of ecodes.EV_*
+	Code  uint16          // event code related to the event type
+	Value int32           // event value related to the event type
 }
 
 type Device struct {
@@ -48,42 +49,41 @@ func (device Device) Close() (_ error) {
 
 // ReadEvents streams parses and streams all inputs from Device.Input
 func (device Device) ReadEvents() <-chan InputEvent {
-	queue := make(chan InputEvent)
+	queue := make(chan InputEvent, 16)
 
 	go func() {
-		buf := make([]byte, 16)
-
 		for {
-			_, err := device.Input.Read(buf)
+			events := make([]InputEvent, 16)
+			buffer := make([]byte, int(unsafe.Sizeof(InputEvent{}))*16)
+
+			r, err := device.Input.Read(buffer)
 			if err != nil {
 				log.Fatalln(err)
 			}
+
+			log.Printf("read=%d", r)
 
 			//
 			// For help see:
 			// https://www.kernel.org/doc/Documentation/input/input.txt
 			//
 
-			sec := binary.LittleEndian.Uint32(buf[0:8])
-			ts := time.Unix(int64(sec), 0)
-
-			typ := binary.LittleEndian.Uint16(buf[8:10])
-			code := binary.LittleEndian.Uint16(buf[10:12])
-
-			var value int32
-			err = binary.Read(bytes.NewReader(buf[12:]), binary.LittleEndian, &value)
+			b := bytes.NewBuffer(buffer)
+			err = binary.Read(b, binary.LittleEndian, &events)
 			if err != nil {
 				log.Fatalln(err)
 			}
 
-			event := InputEvent{
-				Time:  ts,
-				Type:  typ,
-				Code:  code,
-				Value: value,
-			}
+			for inx, event := range events {
+				log.Printf("inx=%d event=%v", inx, event)
 
-			queue <- event
+				// skip trailing structures
+				if event.Time.Sec == 0 {
+					break
+				}
+
+				queue <- event
+			}
 		}
 	}()
 
@@ -108,6 +108,10 @@ func (device Device) ReadIdentifiers() <-chan uint32 {
 				}
 
 				if event.Code == keyEnter {
+					if input == "" {
+						continue
+					}
+
 					num, err := strconv.ParseUint(input, 10, 64)
 					if err != nil {
 						//
