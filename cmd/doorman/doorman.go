@@ -12,8 +12,8 @@ import (
 var (
 	devicePath = flag.String("i", "/dev/input/event0", "Input path of the RFID reader")
 	interval   = flag.Duration("u", time.Minute*10, "Update interval for the chip-number database")
-	duration   = flag.Duration("d", time.Second*6, "Duration the door should open")
-	accessPath = flag.String("o", "", "Offline access json path")
+	duration   = flag.Duration("o", time.Second*6, "Open door duration")
+	accessPath = flag.String("d", "", "Default access JSON path")
 )
 
 func init() {
