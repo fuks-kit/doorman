@@ -6,17 +6,22 @@ import (
 	"strings"
 )
 
+var spreadsheetId = ""
+
+func SetAuthUsersSheetId(sheetId string) {
+	spreadsheetId = sheetId
+}
+
 func GetAuthorisedUsersFromSheet() (users []AuthorisedUser, _ error) {
-	sheetId := "1eNZxLDzBPZDZ5JKI47ZoUlw8pB6C--7MQiRBxspO4EI"
 	readRange := "A2:C"
 
 	resp, err := sheetsService.
 		Spreadsheets.
 		Values.
-		Get(sheetId, readRange).
+		Get(spreadsheetId, readRange).
 		Do()
 	if err != nil {
-		return nil, fmt.Errorf("unable to retrieve data from sheet: sheetId=%s error=%v", sheetId, err)
+		return nil, fmt.Errorf("unable to retrieve data from sheet: spreadsheetId=%s error=%v", spreadsheetId, err)
 	}
 
 	//log.Printf("resp=%s", simple.PrettifyMarshaler(resp))

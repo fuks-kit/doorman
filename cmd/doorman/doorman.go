@@ -4,6 +4,7 @@ import (
 	"flag"
 	"github.com/fuks-kit/doorman/access"
 	"github.com/fuks-kit/doorman/door"
+	"github.com/fuks-kit/doorman/fuks"
 	"github.com/fuks-kit/doorman/rfid"
 	"log"
 	"time"
@@ -14,6 +15,7 @@ var (
 	interval   = flag.Duration("u", time.Minute*10, "Update interval for the chip-number database")
 	duration   = flag.Duration("o", time.Second*6, "Open door duration")
 	accessPath = flag.String("d", "", "Default access JSON path")
+	sheetId    = flag.String("s", "1eNZxLDzBPZDZ5JKI47ZoUlw8pB6C--7MQiRBxspO4EI", "Sheet-Id for list with access data")
 )
 
 func init() {
@@ -27,6 +29,10 @@ func main() {
 
 	if *accessPath != "" {
 		access.SourceDefaultAccessFile(*accessPath)
+	}
+
+	if *sheetId != "" {
+		fuks.SetAuthUsersSheetId(*sheetId)
 	}
 
 	access.SetUpdateInterval(*interval)
