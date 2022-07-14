@@ -29,7 +29,7 @@ instructions [here](https://developers.google.com/workspace/guides/create-creden
 to create a new credentials.json.
 The generated JSON must be placed under ```fuks/credentials.json``` and will be included in the compiled GO executable.
 
-> Note that you might need to update **config.Subject** email value in the ````fuks/fuks.go````
+> Note that you might need to update the email address field **config.Subject** in ```fuks/fuks.go```
 
 ## Compile and install Doorman CLI
 
