@@ -38,7 +38,7 @@ func SetDynamic(list []fuks.AuthorisedUser) {
 	}
 }
 
-func SourceOfficeAccessJson(path string) {
+func SourceDefaultAccessFile(path string) {
 	log.Printf("Sourcing offline access file...")
 
 	byt, err := ioutil.ReadFile(path)

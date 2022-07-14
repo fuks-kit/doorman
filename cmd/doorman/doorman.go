@@ -26,7 +26,7 @@ func main() {
 	log.Printf("Doorman initialising...")
 
 	if *accessPath != "" {
-		access.SourceOfficeAccessJson(*accessPath)
+		access.SourceDefaultAccessFile(*accessPath)
 	}
 
 	access.SetUpdateInterval(*interval)
