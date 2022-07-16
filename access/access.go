@@ -59,3 +59,7 @@ func SourceDefaultAccessFile(path string) {
 		offline[rfid.TrimTag(user.ChipNumber)] = user
 	}
 }
+
+func GetAuthorisedUsers() map[uint32]fuks.AuthorisedUser {
+	return authorised
+}
