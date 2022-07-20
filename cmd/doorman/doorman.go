@@ -1,21 +1,51 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"github.com/fuks-kit/doorman/access"
 	"github.com/fuks-kit/doorman/door"
 	"github.com/fuks-kit/doorman/fuks"
 	"github.com/fuks-kit/doorman/rfid"
+	"io/ioutil"
 	"log"
 	"time"
 )
 
+type Config struct {
+	// Input path of the RFID reader
+	InputDevice string `json:"input-device"`
+	// Update interval for the chip-number database
+	UpdateInterval string `json:"update-interval"`
+	// Open door duration
+	OpenDoor string `json:"open-door"`
+	// Sheet-Id for list with chip numbers
+	SheetId string `json:"spreadsheet-id"`
+}
+
+func (config Config) GetUpdateInterval() time.Duration {
+	duration, err := time.ParseDuration(config.UpdateInterval)
+	if err != nil {
+		log.Fatalf("Couldn't parse update-interval: %v", err)
+	}
+
+	return duration
+}
+
+func (config Config) GetOpenDoorDuration() time.Duration {
+	duration, err := time.ParseDuration(config.OpenDoor)
+	if err != nil {
+		log.Fatalf("Couldn't parse open-door: %v", err)
+	}
+
+	return duration
+}
+
+var config Config
+
 var (
-	devicePath = flag.String("i", "/dev/input/event0", "Input path of the RFID reader")
-	interval   = flag.Duration("u", time.Minute*10, "Update interval for the chip-number database")
-	duration   = flag.Duration("o", time.Second*6, "Open door duration")
-	accessPath = flag.String("d", "", "Default access JSON path")
-	sheetId    = flag.String("s", "1eNZxLDzBPZDZ5JKI47ZoUlw8pB6C--7MQiRBxspO4EI", "Sheet-Id for list with access data")
+	configPath = flag.String("c", "config.json", "Config JSON path")
+	accessPath = flag.String("f", "fallback-access.json", "Default access JSON path")
 )
 
 func init() {
@@ -27,18 +57,29 @@ func main() {
 
 	log.Printf("Doorman initialising...")
 
+	log.Printf("Sourcing config file...")
+	byt, err := ioutil.ReadFile(*configPath)
+	if err != nil {
+		log.Fatalf("Cloudn't read config file %s: %v", *configPath, err)
+	}
+
+	err = json.Unmarshal(byt, &config)
+	if err != nil {
+		log.Fatalf("Cloudn't parse config file %s: %v", *configPath, err)
+	}
+
 	if *accessPath != "" {
 		access.SourceDefaultAccessFile(*accessPath)
 	}
 
-	if *sheetId != "" {
-		fuks.SetAuthUsersSheetId(*sheetId)
+	if config.SheetId != "" {
+		fuks.SetAuthUsersSheetId(config.SheetId)
 	}
 
-	access.SetUpdateInterval(*interval)
+	access.SetUpdateInterval(config.GetUpdateInterval())
 
-	log.Printf("Listening for RFID events (%s)", *devicePath)
-	device := rfid.Reader(*devicePath)
+	log.Printf("Listening for RFID events (%s)", config.InputDevice)
+	device := rfid.Reader(config.InputDevice)
 
 	log.Printf("----------------------------")
 	log.Printf("Doorman is ready")
@@ -49,7 +90,7 @@ func main() {
 
 		if user, ok := access.HasAccess(id); ok {
 			log.Printf("Open door for %s (0x%08x)", user.GetLogName(), id)
-			door.Open(*duration)
+			door.Open(config.GetOpenDoorDuration())
 		}
 	}
 }

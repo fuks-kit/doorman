@@ -46,12 +46,23 @@ go install cmd/door/door.go
 ## Create doorman service
 
 ```shell
+sudo mkdir -p /etc/doorman/
+sudo cp config.json /etc/doorman/config.json
+sudo cp fallback_access.json /etc/doorman/fallback-access.json
+
 sudo cp doorman.service /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo service doorman start
 ```
 
 Run ```sudo systemctl enable doorman``` to start the doorman service on startup
+
+## Troubleshooting
+
+```shell
+# View logs
+cat /var/log/doorman.log
+```
 
 ## Cross compile executables
 

@@ -1,0 +1,6 @@
+{
+  "input-device": "/dev/input/event0",
+  "update-interval": "10m",
+  "open-door": "10s",
+  "spreadsheet-id": "1eNZxLDzBPZDZ5JKI47ZoUlw8pB6C--7MQiRBxspO4EI"
+}
