@@ -12,10 +12,10 @@ type customArguments struct {
 	ChipNumber string `json:"KIT_Card_Chipnummer"`
 }
 
-func GetActiveMemberIds() (memberIds map[string]bool) {
+func GetActiveMemberIds() (memberIds map[string]bool, _ error) {
 	members, err := adminService.Members.List("aktive@fuks.org").Do()
 	if err != nil {
-		log.Fatalln(err)
+		return nil, err
 	}
 
 	memberIds = make(map[string]bool)
@@ -58,7 +58,10 @@ func GetAllUsers() (users []*admin.User, _ error) {
 // GetAuthorisedUsers returns users who have access to the fuks
 // office based on their membership in the "aktive" group.
 func GetAuthorisedUsers() (authUsers []AuthorisedUser, _ error) {
-	activeMember := GetActiveMemberIds()
+	activeMember, err := GetActiveMemberIds()
+	if err != nil {
+		return nil, err
+	}
 
 	users, err := GetAllUsers()
 	if err != nil {
