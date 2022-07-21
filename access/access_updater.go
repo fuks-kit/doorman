@@ -1,7 +1,9 @@
 package access
 
 import (
+	"encoding/json"
 	"github.com/fuks-kit/doorman/fuks"
+	"io/ioutil"
 	"log"
 	"time"
 )
@@ -21,6 +23,15 @@ func UpdateIdentifiers() {
 		users = append(users, sheetUsers...)
 	} else {
 		log.Printf("Couldn't update authorised chip numbers from sheet: %v", err)
+	}
+
+	byt, err := json.MarshalIndent(users, "", "  ")
+	if err == nil {
+		log.Printf("Write %s", recoveryFile)
+		err = ioutil.WriteFile(recoveryFile, byt, 0644)
+		if err != nil {
+			log.Printf("Couldn't write %s: %v", recoveryFile, err)
+		}
 	}
 
 	SetDynamic(users)
