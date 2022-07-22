@@ -83,7 +83,7 @@ func GetAuthorisedUsers() (authUsers []AuthorisedUser, _ error) {
 
 			chipNumber, err := strconv.ParseUint(customArgs.ChipNumber, 10, 64)
 			if err != nil {
-				log.Printf("Couldn't parse '%s' to uint64: user.Id=%s", customArgs.ChipNumber, user.Id)
+				log.Printf("Couldn't parse '%s' to uint64: user.PrimaryEmail=%s", customArgs.ChipNumber, user.PrimaryEmail)
 				continue
 			}
 
