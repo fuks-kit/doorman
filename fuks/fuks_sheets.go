@@ -2,7 +2,6 @@ package fuks
 
 import (
 	"fmt"
-	"log"
 	"strconv"
 	"strings"
 )
@@ -15,8 +14,7 @@ func SetAuthUsersSheetId(sheetId string) {
 
 func GetAuthorisedUsersFromSheet() (users []AuthorisedUser, _ error) {
 	if spreadsheetId == "" {
-		log.Printf("Skip sourcing sheet users (SpreadsheetId=\"\")")
-		return
+		return nil, fmt.Errorf("SpreadsheetId='%s'", spreadsheetId)
 	}
 
 	readRange := "A2:C"
