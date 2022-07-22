@@ -44,8 +44,8 @@ func (config Config) GetOpenDoorDuration() time.Duration {
 var config Config
 
 var (
-	configPath = flag.String("c", "config.json", "Config JSON path")
-	accessPath = flag.String("f", "fallback-access.json", "Default access JSON path")
+	configPath   = flag.String("c", "config.json", "Config JSON path")
+	fallbackPath = flag.String("f", "fallback-access.json", "Default access JSON path")
 )
 
 func init() {
@@ -68,15 +68,16 @@ func main() {
 		log.Fatalf("Cloudn't parse config file %s: %v", *configPath, err)
 	}
 
-	if *accessPath != "" {
-		access.SourceDefaultAccessFile(*accessPath)
-	}
-
 	if config.SheetId != "" {
 		fuks.SetAuthUsersSheetId(config.SheetId)
 	}
 
-	access.SetUpdateInterval(config.GetUpdateInterval())
+	if *fallbackPath != "" {
+		access.SourceFallbackAccess(*fallbackPath)
+	}
+
+	access.Recover()
+	access.StartUpdater(config.GetUpdateInterval())
 
 	log.Printf("Listening for RFID events (%s)", config.InputDevice)
 	device := rfid.Reader(config.InputDevice)

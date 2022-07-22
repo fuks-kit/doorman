@@ -12,7 +12,7 @@ func main() {
 
 	fmt.Println("Authorised fuks users:")
 
-	authorisedUsers, err := fuks.GetAuthorisedUsers()
+	authorisedUsers, err := fuks.GetAuthorisedFuksUsers()
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -25,7 +25,7 @@ func main() {
 
 	fmt.Println("Authorised externals:")
 
-	authorisedUsers, err = fuks.GetAuthorisedUsersFromSheet()
+	authorisedUsers, err = fuks.GetAuthorisedSheetUsers()
 	if err != nil {
 		log.Fatalln(err)
 	}

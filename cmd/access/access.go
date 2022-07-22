@@ -14,6 +14,11 @@ var (
 		"s",
 		"1eNZxLDzBPZDZ5JKI47ZoUlw8pB6C--7MQiRBxspO4EI",
 		"Sheet-Id for list with access data")
+
+	recovery = flag.Bool(
+		"r",
+		false,
+		"Try to read recovery JSON")
 )
 
 func init() {
@@ -28,7 +33,11 @@ func main() {
 		fuks.SetAuthUsersSheetId(*sheetId)
 	}
 
-	access.UpdateIdentifiers()
+	if *recovery {
+		access.Recover()
+	}
+
+	access.Update(false)
 	users := access.GetAuthorisedUsers()
 	out, err := json.MarshalIndent(users, "", "  ")
 	if err != nil {

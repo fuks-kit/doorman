@@ -55,9 +55,9 @@ func GetAllUsers() (users []*admin.User, _ error) {
 	return
 }
 
-// GetAuthorisedUsers returns users who have access to the fuks
+// GetAuthorisedFuksUsers returns users who have access to the fuks
 // office based on their membership in the "aktive" group.
-func GetAuthorisedUsers() (authUsers []AuthorisedUser, _ error) {
+func GetAuthorisedFuksUsers() (authUsers []AuthorisedUser, _ error) {
 	activeMember, err := GetActiveMemberIds()
 	if err != nil {
 		return nil, err

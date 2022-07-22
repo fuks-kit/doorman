@@ -12,7 +12,7 @@ func SetAuthUsersSheetId(sheetId string) {
 	spreadsheetId = sheetId
 }
 
-func GetAuthorisedUsersFromSheet() (users []AuthorisedUser, _ error) {
+func GetAuthorisedSheetUsers() (users []AuthorisedUser, _ error) {
 	if spreadsheetId == "" {
 		return nil, fmt.Errorf("SpreadsheetId='%s'", spreadsheetId)
 	}

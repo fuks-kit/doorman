@@ -11,35 +11,14 @@ import (
 
 var lock sync.RWMutex
 
-var offline = make(map[uint32]fuks.AuthorisedUser)
+var fallback = make(map[uint32]fuks.AuthorisedUser)
 var authorised = make(map[uint32]fuks.AuthorisedUser)
-
-const recoveryFile = "doorman-recovery.json"
-
-func init() {
-	log.SetFlags(log.LstdFlags | log.Lshortfile)
-
-	log.Printf("Check for %s", recoveryFile)
-	byt, err := ioutil.ReadFile(recoveryFile)
-	if err != nil {
-		return
-	}
-
-	var users []fuks.AuthorisedUser
-	log.Printf("Sourcing %s", recoveryFile)
-	err = json.Unmarshal(byt, &users)
-	if err != nil {
-		log.Printf("Couldn't unmarshal %s: %v", recoveryFile, err)
-	} else {
-		SetDynamic(users)
-	}
-}
 
 func HasAccess(id uint32) (user fuks.AuthorisedUser, access bool) {
 	lock.RLock()
 	defer lock.RUnlock()
 
-	if user, access = offline[id]; access {
+	if user, access = fallback[id]; access {
 		return
 	}
 
@@ -59,28 +38,36 @@ func SetDynamic(list []fuks.AuthorisedUser) {
 	}
 }
 
-func SourceDefaultAccessFile(path string) {
-	log.Printf("Sourcing offline access file...")
+func SourceFallbackAccess(file string) {
+	log.Printf("Sourcing fallback access file...")
 
-	byt, err := ioutil.ReadFile(path)
+	byt, err := ioutil.ReadFile(file)
 	if err != nil {
-		log.Fatalf("Couldn't read access json: %v", err)
+		log.Fatalf("Couldn't read access JSON: %v", err)
 	}
 
 	var trustedUsers []fuks.AuthorisedUser
 	err = json.Unmarshal(byt, &trustedUsers)
 	if err != nil {
-		log.Fatalf("Couldn't unmarshal access json: %v", err)
+		log.Fatalf("Couldn't unmarshal fallback JSON: %v", err)
 	}
 
 	lock.Lock()
 	defer lock.Unlock()
 
 	for _, user := range trustedUsers {
-		offline[rfid.TrimTag(user.ChipNumber)] = user
+		fallback[rfid.TrimTag(user.ChipNumber)] = user
 	}
 }
 
-func GetAuthorisedUsers() map[uint32]fuks.AuthorisedUser {
-	return authorised
+func GetAuthorisedUsers() (users []fuks.AuthorisedUser) {
+	for _, user := range authorised {
+		users = append(users, user)
+	}
+
+	for _, user := range fallback {
+		users = append(users, user)
+	}
+
+	return
 }
