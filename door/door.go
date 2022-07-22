@@ -7,7 +7,7 @@ import (
 )
 
 func Open(duration time.Duration) {
-	if duration == 0 {
+	if duration <= 0 {
 		return
 	}
 
