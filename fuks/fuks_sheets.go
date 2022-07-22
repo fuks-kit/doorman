@@ -2,6 +2,7 @@ package fuks
 
 import (
 	"fmt"
+	"log"
 	"strconv"
 	"strings"
 )
@@ -13,6 +14,11 @@ func SetAuthUsersSheetId(sheetId string) {
 }
 
 func GetAuthorisedUsersFromSheet() (users []AuthorisedUser, _ error) {
+	if spreadsheetId == "" {
+		log.Printf("Skip sourcing sheet users (SpreadsheetId=\"\")")
+		return
+	}
+
 	readRange := "A2:C"
 
 	resp, err := sheetsService.
@@ -21,7 +27,8 @@ func GetAuthorisedUsersFromSheet() (users []AuthorisedUser, _ error) {
 		Get(spreadsheetId, readRange).
 		Do()
 	if err != nil {
-		return nil, fmt.Errorf("unable to retrieve data from sheet: spreadsheetId=%s error=%v", spreadsheetId, err)
+		return nil, fmt.Errorf("unable to retrieve data from sheet: spreadsheetId=%s error=%v",
+			spreadsheetId, err)
 	}
 
 	//log.Printf("resp=%s", simple.PrettifyMarshaler(resp))
