@@ -86,12 +86,14 @@ func main() {
 	log.Printf("Doorman is ready")
 	log.Printf("----------------------------")
 
+	openDoorDuration := config.GetOpenDoorDuration()
+
 	for id := range device.ReadIdentifiers() {
 		log.Printf("Access event: RFID=0x%08x", id)
 
 		if user, ok := access.HasAccess(id); ok {
-			log.Printf("Open door for %s (0x%08x)", user.GetLogName(), id)
-			door.Open(config.GetOpenDoorDuration())
+			log.Printf("Open door: name='%s' rfid=0x%08x", user.GetLogName(), id)
+			door.Open(openDoorDuration)
 		}
 	}
 }
