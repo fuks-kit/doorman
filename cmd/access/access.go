@@ -10,7 +10,10 @@ import (
 )
 
 var (
-	sheetId = flag.String("s", "1eNZxLDzBPZDZ5JKI47ZoUlw8pB6C--7MQiRBxspO4EI", "Sheet-Id for list with access data")
+	sheetId = flag.String(
+		"s",
+		"1eNZxLDzBPZDZ5JKI47ZoUlw8pB6C--7MQiRBxspO4EI",
+		"Sheet-Id for list with access data")
 )
 
 func init() {
