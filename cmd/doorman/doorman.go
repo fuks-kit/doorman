@@ -92,7 +92,8 @@ func main() {
 		log.Printf("Access event: RFID=0x%08x", id)
 
 		if user, ok := access.HasAccess(id); ok {
-			log.Printf("Open door: name='%s' rfid=0x%08x", user.GetLogName(), id)
+			log.Printf("Open door: name='%s' org='%s' rfid=0x%08x",
+				user.Name, user.Organization, id)
 			door.Open(openDoorDuration)
 		}
 	}
