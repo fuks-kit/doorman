@@ -6,6 +6,7 @@ import (
 	"github.com/fuks-kit/doorman/rfid"
 	"io/ioutil"
 	"log"
+	"sort"
 	"sync"
 )
 
@@ -68,6 +69,10 @@ func GetAuthorisedUsers() (users []fuks.AuthorisedUser) {
 	for _, user := range fallback {
 		users = append(users, user)
 	}
+
+	sort.Slice(users, func(i, j int) bool {
+		return users[i].ChipNumber < users[j].ChipNumber
+	})
 
 	return
 }
