@@ -22,7 +22,7 @@ func Recover() {
 	if err != nil {
 		log.Printf("Couldn't unmarshal %s: %v", recoveryFile, err)
 	} else {
-		SetDynamic(users)
+		setAuthUsers(users)
 	}
 }
 

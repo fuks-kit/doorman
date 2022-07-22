@@ -26,7 +26,7 @@ func HasAccess(id uint32) (user fuks.AuthorisedUser, access bool) {
 	return
 }
 
-func SetDynamic(list []fuks.AuthorisedUser) {
+func setAuthUsers(list []fuks.AuthorisedUser) {
 	lock.Lock()
 	defer lock.Unlock()
 

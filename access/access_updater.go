@@ -7,7 +7,7 @@ import (
 
 func Update(persist bool) {
 	users := fuks.GetAuthorisedUsers()
-	SetDynamic(users)
+	setAuthUsers(users)
 
 	if persist {
 		WriteRecovery(users)
