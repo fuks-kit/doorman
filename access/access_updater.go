@@ -15,10 +15,6 @@ func Update(persist bool) {
 }
 
 func StartUpdater(interval time.Duration) {
-
-	// Fetch init data
-	Update(true)
-
 	go func() {
 		ticker := time.NewTicker(interval)
 		for range ticker.C {
