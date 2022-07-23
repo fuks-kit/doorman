@@ -83,7 +83,7 @@ func main() {
 	device := rfid.Reader(config.InputDevice)
 
 	log.Printf("----------------------------")
-	log.Printf("Doorman is ready")
+	log.Printf("Doorman ready")
 	log.Printf("----------------------------")
 
 	openDoorDuration := config.GetOpenDoorDuration()
