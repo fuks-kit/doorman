@@ -27,6 +27,10 @@ func Recover() {
 }
 
 func WriteRecovery(users []fuks.AuthorisedUser) {
+	if users == nil || len(users) == 0 {
+		return
+	}
+
 	byt, err := json.MarshalIndent(users, "", "  ")
 	if err == nil {
 		log.Printf("Write %s", recoveryFile)
