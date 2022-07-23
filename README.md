@@ -63,6 +63,8 @@ Run ```sudo systemctl enable doorman``` to start the doorman service on startup
 ```shell
 # View logs
 cat /var/log/doorman.log
+# Find Raspberry Pi
+nmap -T5 -sP 10.0.0.2-254
 ```
 
 ## Cross compile executables
