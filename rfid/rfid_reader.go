@@ -124,8 +124,7 @@ func (device Device) ReadIdentifiers() <-chan uint32 {
 
 				var number string
 
-				// See for key details:
-				// https://github.com/torvalds/linux/blob/master/include/uapi/linux/input-event-codes.h
+				// See: https://github.com/torvalds/linux/blob/master/include/uapi/linux/input-event-codes.h
 				switch event.Code {
 				case 2:
 					number = "1"
