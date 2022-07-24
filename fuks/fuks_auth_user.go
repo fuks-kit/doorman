@@ -5,7 +5,7 @@ import (
 )
 
 type AuthorisedUser struct {
-	Email        string `json:"id,omitempty"`
+	Email        string `json:"email,omitempty"`
 	Name         string `json:"name,omitempty"`
 	ChipNumber   uint64 `json:"chipNumber,omitempty"`
 	Organization string `json:"organization,omitempty"`
