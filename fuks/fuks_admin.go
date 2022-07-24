@@ -13,15 +13,27 @@ type customArguments struct {
 }
 
 func GetActiveMemberIds() (memberIds map[string]bool, _ error) {
-	members, err := adminService.Members.List("aktive@fuks.org").Do()
-	if err != nil {
-		return nil, err
-	}
-
 	memberIds = make(map[string]bool)
 
-	for _, member := range members.Members {
-		memberIds[member.Id] = true
+	var nextPageToken string
+
+	for {
+		members, err := adminService.Members.
+			List("aktive@fuks.org").
+			PageToken(nextPageToken).
+			Do()
+		if err != nil {
+			return nil, err
+		}
+
+		for _, member := range members.Members {
+			memberIds[member.Id] = true
+		}
+
+		nextPageToken = members.NextPageToken
+		if nextPageToken == "" {
+			break
+		}
 	}
 
 	return
@@ -36,17 +48,15 @@ func GetAllUsers() (users []*admin.User, _ error) {
 			Domain("fuks.org").
 			OrderBy("email").
 			Projection("full").
-			MaxResults(500).
 			PageToken(nextPageToken).
 			Do()
 		if err != nil {
 			return nil, fmt.Errorf("unable to retrieve users in domain: %v", err)
 		}
 
-		nextPageToken = results.NextPageToken
-
 		users = append(users, results.Users...)
 
+		nextPageToken = results.NextPageToken
 		if nextPageToken == "" {
 			break
 		}
