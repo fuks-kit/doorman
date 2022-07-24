@@ -27,6 +27,8 @@ func init() {
 	if err != nil {
 		log.Fatalln(err)
 	}
+
+	// Don't fuck with this. The email to the service account is required here!
 	config.Subject = "patrick.zierahn@fuks.org"
 
 	ctx := context.Background()

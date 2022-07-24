@@ -12,6 +12,7 @@ type customArguments struct {
 	ChipNumber string `json:"KIT_Card_Chipnummer"`
 }
 
+// GetActiveMemberIds fetches a list with active fuks members and returns a list with user ids.
 func GetActiveMemberIds() (memberIds map[string]bool, _ error) {
 	memberIds = make(map[string]bool)
 
@@ -39,6 +40,7 @@ func GetActiveMemberIds() (memberIds map[string]bool, _ error) {
 	return
 }
 
+// GetAllUsers returns all users in fuks.org
 func GetAllUsers() (users []*admin.User, _ error) {
 	var nextPageToken string
 

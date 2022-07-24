@@ -8,10 +8,12 @@ import (
 
 var spreadsheetId = ""
 
+// SetAuthUsersSheetId sets the spreadsheetId for external persons that have access to the office.
 func SetAuthUsersSheetId(sheetId string) {
 	spreadsheetId = sheetId
 }
 
+// GetAuthorisedSheetUsers fetches and pares a Google Sheet with names and KIT-Card numbers.
 func GetAuthorisedSheetUsers() (users []AuthorisedUser, _ error) {
 	if spreadsheetId == "" {
 		return nil, fmt.Errorf("SpreadsheetId='%s'", spreadsheetId)

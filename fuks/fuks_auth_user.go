@@ -11,6 +11,8 @@ type AuthorisedUser struct {
 	Organization string `json:"organization,omitempty"`
 }
 
+// GetAuthorisedUsers returns a list with all authorised users and their corresponding KIT-Card number.
+// The list includes fuks members and external users entered into Google Sheets.
 func GetAuthorisedUsers() (users []AuthorisedUser) {
 	log.Printf("Get authorised chip numbers")
 
