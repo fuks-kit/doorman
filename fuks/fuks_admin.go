@@ -106,7 +106,7 @@ func GetAuthorisedFuksUsers() (authUsers []AuthorisedUser, _ error) {
 
 			if activeMember[user.Id] || user.Name.FamilyName == "Zierahn" {
 				authUser := AuthorisedUser{
-					Id:           user.Id,
+					Email:        user.PrimaryEmail,
 					Name:         user.Name.FullName,
 					ChipNumber:   chipNumber,
 					Organization: "fuks",
