@@ -5,6 +5,7 @@ import (
 	"flag"
 	"github.com/fuks-kit/doorman/fuks"
 	"log"
+	"sort"
 	"time"
 )
 
@@ -30,6 +31,10 @@ func main() {
 
 	log.Printf("--> Fetch duration %v", time.Now().Sub(start))
 
+	sort.Slice(users, func(i, j int) bool {
+		return users[i].Name < users[j].Name
+	})
+
 	out, err := json.MarshalIndent(users, "", "  ")
 	if err != nil {
 		log.Fatalln(err)
@@ -49,6 +54,10 @@ func main() {
 		}
 
 		log.Printf("--> Fetch duration %v", time.Now().Sub(start))
+
+		sort.Slice(users, func(i, j int) bool {
+			return users[i].Name < users[j].Name
+		})
 
 		out, err = json.MarshalIndent(users, "", "  ")
 		if err != nil {
