@@ -82,11 +82,11 @@ func main() {
 	log.Printf("Listening for RFID events (%s)", config.InputDevice)
 	device := rfid.Reader(config.InputDevice)
 
+	openDoorDuration := config.GetOpenDoorDuration()
+
 	log.Printf("----------------------------")
 	log.Printf("Doorman ready")
 	log.Printf("----------------------------")
-
-	openDoorDuration := config.GetOpenDoorDuration()
 
 	for id := range device.ReadIdentifiers() {
 		log.Printf("Access event: RFID=0x%08x", id)
