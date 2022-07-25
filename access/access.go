@@ -5,7 +5,6 @@ import (
 	"github.com/fuks-kit/doorman/fuks"
 	"io/ioutil"
 	"log"
-	"sort"
 	"sync"
 )
 
@@ -61,18 +60,9 @@ func SourceFallbackAccess(file string) {
 	}
 }
 
-func GetAuthorisedUsers() (users []fuks.AuthorisedUser) {
-	for _, user := range authorised {
-		users = append(users, user)
+func GetAuthorisedUsers() (data map[string]interface{}) {
+	return map[string]interface{}{
+		"fallback":   fallback,
+		"authorised": authorised,
 	}
-
-	for _, user := range fallback {
-		users = append(users, user)
-	}
-
-	sort.Slice(users, func(i, j int) bool {
-		return users[i].ChipNumber < users[j].ChipNumber
-	})
-
-	return
 }
