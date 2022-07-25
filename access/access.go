@@ -3,7 +3,6 @@ package access
 import (
 	"encoding/json"
 	"github.com/fuks-kit/doorman/fuks"
-	"github.com/fuks-kit/doorman/rfid"
 	"io/ioutil"
 	"log"
 	"sort"
@@ -34,7 +33,7 @@ func setAuthUsers(list []fuks.AuthorisedUser) {
 	authorised = make(map[uint32]fuks.AuthorisedUser)
 
 	for _, user := range list {
-		trimmedTag := rfid.TrimTag(user.ChipNumber)
+		trimmedTag := trimTag(user.ChipNumber)
 		authorised[trimmedTag] = user
 	}
 }
@@ -57,7 +56,8 @@ func SourceFallbackAccess(file string) {
 	defer lock.Unlock()
 
 	for _, user := range trustedUsers {
-		fallback[rfid.TrimTag(user.ChipNumber)] = user
+		trimmedTag := trimTag(user.ChipNumber)
+		fallback[trimmedTag] = user
 	}
 }
 
