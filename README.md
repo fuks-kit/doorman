@@ -39,7 +39,6 @@ go get all
 go install cmd/doorman/doorman.go
 go install cmd/rfid/doorman_rfid.go
 go install cmd/door/door.go
-go install cmd/access/doorman_access.go
 ```
 
 > Note: Add ```export PATH=$PATH:$HOME/go/bin/``` to ```.bashrc```
