@@ -9,6 +9,8 @@ The RFID reader placed at the office door can then read these numbers and pass t
 There the numbers will be checked and authenticated.
 If the number can be matched to a fuks user, the door will be opened by using a simple relay and GPIO pins.
 
+![Example](photo.jpg)
+
 ## Create new credentials
 
 The Doorman system needs access to Google Workspace APIs to fetch authorized RFID chip-numbers.
