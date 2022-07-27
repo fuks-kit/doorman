@@ -13,15 +13,15 @@ var lock sync.RWMutex
 var fallback = make(map[uint32]fuks.AuthorisedUser)
 var authorised = make(map[uint32]fuks.AuthorisedUser)
 
-func HasAccess(id uint32) (user fuks.AuthorisedUser, access bool) {
+func Validate(rfid uint32) (user fuks.AuthorisedUser, access bool) {
 	lock.RLock()
 	defer lock.RUnlock()
 
-	if user, access = fallback[id]; access {
+	if user, access = fallback[rfid]; access {
 		return
 	}
 
-	user, access = authorised[id]
+	user, access = authorised[rfid]
 	return
 }
 

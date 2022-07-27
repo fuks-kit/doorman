@@ -91,7 +91,7 @@ func main() {
 	for id := range device.ReadIdentifiers() {
 		log.Printf("Access event: RFID=0x%08x", id)
 
-		if user, ok := access.HasAccess(id); ok {
+		if user, ok := access.Validate(id); ok {
 			log.Printf("Open door: name='%s' org='%s' rfid=0x%08x",
 				user.Name, user.Organization, id)
 			door.Open(openDoorDuration)
