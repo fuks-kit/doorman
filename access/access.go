@@ -38,7 +38,7 @@ func setAuthUsers(list []fuks.AuthorisedUser) {
 }
 
 func SourceFallbackAccess(file string) {
-	log.Printf("Sourcing fallback access file...")
+	log.Printf("Sourcing fallback access file (%s)", file)
 
 	byt, err := ioutil.ReadFile(file)
 	if err != nil {
