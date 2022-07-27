@@ -34,7 +34,7 @@ func main() {
 	}
 
 	if *recovery {
-		access.Recover()
+		access.SourceRecovery()
 	}
 
 	access.Update(false)

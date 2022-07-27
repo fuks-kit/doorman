@@ -76,7 +76,7 @@ func main() {
 		access.SourceFallbackAccess(*fallbackPath)
 	}
 
-	access.Recover()
+	access.SourceRecovery()
 	access.StartUpdater(config.GetUpdateInterval())
 
 	log.Printf("Listening for RFID events (%s)", config.InputDevice)

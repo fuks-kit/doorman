@@ -9,7 +9,7 @@ import (
 
 const recoveryFile = "doorman-recovery.json"
 
-func Recover() {
+func SourceRecovery() {
 	log.Printf("Try to recover authorized users...")
 	byt, err := ioutil.ReadFile(recoveryFile)
 	if err != nil {
