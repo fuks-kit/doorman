@@ -26,7 +26,7 @@ func Recover() {
 	}
 }
 
-func WriteRecovery(users []fuks.AuthorisedUser) {
+func writeRecovery(users []fuks.AuthorisedUser) {
 	if users == nil || len(users) == 0 {
 		return
 	}

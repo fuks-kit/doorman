@@ -10,7 +10,7 @@ func Update(persist bool) {
 	setAuthUsers(users)
 
 	if persist {
-		WriteRecovery(users)
+		writeRecovery(users)
 	}
 }
 
