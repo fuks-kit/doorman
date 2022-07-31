@@ -6,8 +6,8 @@ import (
 )
 
 // generateAccessList generates a map with valid access RFIDs
-func generateAccessList(users []fuks.AuthorisedUser) (auth map[uint32]fuks.AuthorisedUser) {
-	auth = make(map[uint32]fuks.AuthorisedUser)
+func generateAccessList(users []fuks.AuthorisedUser) (auth accessList) {
+	auth = make(accessList)
 
 	buff := make([]byte, 8)
 

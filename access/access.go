@@ -1,60 +1,49 @@
 package access
 
 import (
-	"encoding/json"
 	"github.com/fuks-kit/doorman/fuks"
-	"io/ioutil"
-	"log"
 	"sync"
 )
 
-var mu sync.RWMutex
+type accessList = map[uint32]fuks.AuthorisedUser
 
-var fallback = make(map[uint32]fuks.AuthorisedUser)
-var authorised = make(map[uint32]fuks.AuthorisedUser)
+type Validator struct {
+	sync.RWMutex
+	FallbackAccess accessList `json:"-"`
+	FuksAccess     accessList `json:"fuks"`
+	SheetAccess    accessList `json:"sheet"`
+}
 
-func Validate(rfid uint32) (user fuks.AuthorisedUser, access bool) {
-	mu.RLock()
-	defer mu.RUnlock()
+func WithFallback(fallbackPath string) (auth *Validator) {
+	auth = &Validator{}
 
-	if user, access = fallback[rfid]; access {
-		return
+	if fallbackPath != "" {
+		auth.FallbackAccess = readFallbackAccess(fallbackPath)
 	}
 
-	user, access = authorised[rfid]
+	auth.tryRecover()
 	return
 }
 
-func setAuthUsers(list []fuks.AuthorisedUser) {
-	mu.Lock()
-	defer mu.Unlock()
-
-	authorised = generateAccessList(list)
+func WithoutFallback() (auth *Validator) {
+	return WithFallback("")
 }
 
-func SourceFallbackAccess(file string) {
-	log.Printf("Sourcing fallback access file (%s)", file)
+func (auth *Validator) CheckAccess(rfid uint32) (user fuks.AuthorisedUser, access bool) {
+	auth.RLock()
+	defer auth.RUnlock()
 
-	byt, err := ioutil.ReadFile(file)
-	if err != nil {
-		log.Fatalf("Couldn't read access JSON: %v", err)
+	if user, access = auth.FallbackAccess[rfid]; access {
+		return user, access
 	}
 
-	var trustedUsers []fuks.AuthorisedUser
-	err = json.Unmarshal(byt, &trustedUsers)
-	if err != nil {
-		log.Fatalf("Couldn't unmarshal fallback JSON: %v", err)
+	if user, access = auth.FuksAccess[rfid]; access {
+		return user, access
 	}
 
-	mu.Lock()
-	defer mu.Unlock()
-
-	fallback = generateAccessList(trustedUsers)
-}
-
-func GetAuthorisedUsers() (data map[string]interface{}) {
-	return map[string]interface{}{
-		"fallback":   fallback,
-		"authorised": authorised,
+	if user, access = auth.SheetAccess[rfid]; access {
+		return user, access
 	}
+
+	return fuks.AuthorisedUser{}, false
 }

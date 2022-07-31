@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/fuks-kit/doorman/access"
 	"github.com/fuks-kit/doorman/fuks"
+	"io/ioutil"
 	"log"
 )
 
@@ -13,12 +14,7 @@ var (
 	sheetId = flag.String(
 		"s",
 		"1eNZxLDzBPZDZ5JKI47ZoUlw8pB6C--7MQiRBxspO4EI",
-		"Sheet-Id for list with access data")
-
-	recovery = flag.Bool(
-		"r",
-		false,
-		"Try to read recovery JSON")
+		"SheetAccess-Id for list with access data")
 )
 
 func init() {
@@ -33,16 +29,24 @@ func main() {
 		fuks.SetAuthUsersSheetId(*sheetId)
 	}
 
-	if *recovery {
-		access.SourceRecovery()
+	validator := access.WithoutFallback()
+	validator.Update()
+
+	users := map[string]interface{}{
+		"FallbackAccess": validator.FallbackAccess,
+		"FuksAccess":     validator.FuksAccess,
+		"SheetAccess":    validator.SheetAccess,
 	}
 
-	access.Update(false)
-	users := access.GetAuthorisedUsers()
 	out, err := json.MarshalIndent(users, "", "  ")
 	if err != nil {
 		log.Fatalln(err)
 	}
 
 	fmt.Println(string(out))
+
+	err = ioutil.WriteFile("dump.access.json", out, 0644)
+	if err != nil {
+		log.Fatalln(err)
+	}
 }

@@ -72,12 +72,8 @@ func main() {
 		fuks.SetAuthUsersSheetId(config.SheetId)
 	}
 
-	if *fallbackPath != "" {
-		access.SourceFallbackAccess(*fallbackPath)
-	}
-
-	access.SourceRecovery()
-	access.StartUpdater(config.GetUpdateInterval())
+	validator := access.WithFallback(*fallbackPath)
+	validator.StartUpdater(config.GetUpdateInterval())
 
 	log.Printf("Listening for RFID events (%s)", config.InputDevice)
 	device := rfid.Reader(config.InputDevice)
@@ -91,7 +87,7 @@ func main() {
 	for id := range device.ReadIdentifiers() {
 		log.Printf("Access event: RFID=0x%08x", id)
 
-		if user, ok := access.Validate(id); ok {
+		if user, ok := validator.CheckAccess(id); ok {
 			log.Printf("Open door: name='%s' org='%s' rfid=0x%08x",
 				user.Name, user.Organization, id)
 			door.Open(openDoorDuration)
