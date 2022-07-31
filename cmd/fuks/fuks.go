@@ -48,7 +48,7 @@ func main() {
 	output(users)
 
 	if *sheetId != "" {
-		log.Printf("Fetch authorised users from sheet (%s)", sheetId)
+		log.Printf("Fetch authorised users from sheet (%s)", *sheetId)
 		fuks.SetAuthUsersSheetId(*sheetId)
 
 		start = time.Now()
