@@ -36,9 +36,8 @@ func (validator *Validator) startUpdater(interval time.Duration, recoveryFile st
 	go func() {
 		ticker := time.NewTicker(interval)
 		for range ticker.C {
-			validator.Update()
-
-			if recoveryFile != "" {
+			fail := validator.Update()
+			if !fail && recoveryFile != "" {
 				validator.writeRecovery(recoveryFile)
 			}
 		}
