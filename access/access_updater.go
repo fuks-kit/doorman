@@ -7,7 +7,7 @@ import (
 )
 
 func (validator *Validator) Update() {
-	//log.Printf("Get authorised chip numbers")
+	log.Printf("Update authorised chip numbers")
 
 	if fuksUsers, err := fuks.GetAuthorisedFuksUsers(); err == nil {
 		validator.mu.Lock()
