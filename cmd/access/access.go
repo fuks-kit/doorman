@@ -14,6 +14,16 @@ var (
 		"s",
 		"1eNZxLDzBPZDZ5JKI47ZoUlw8pB6C--7MQiRBxspO4EI",
 		"SheetAccess-Id for list with access data")
+
+	recoveryPath = flag.String(
+		"r",
+		"doorman-recovery.json",
+		"Recovery access JSON path")
+
+	fallbackPath = flag.String(
+		"f",
+		"fallback-access.json",
+		"Fallback access JSON path")
 )
 
 func init() {
@@ -25,7 +35,9 @@ func main() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 
 	validator := access.NewValidator(access.Config{
-		SheetId: *sheetId,
+		SheetId:      *sheetId,
+		RecoveryPath: *recoveryPath,
+		FallbackPath: *fallbackPath,
 	})
 	validator.Update()
 
