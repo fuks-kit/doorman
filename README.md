@@ -64,9 +64,11 @@ Run ```sudo systemctl enable doorman``` to start the doorman service on startup
 ```shell
 # View logs
 cat /var/log/doorman.log
+
 # Find Raspberry Pi
 sudo nmap -PE 10.0.0.0/24
-# Clean up debug procedure:
+
+# Clean up debug procedure
 sudo service doorman stop
 sudo rm /var/log/doorman.log
 sudo rm ~/doorman-recovery.json
