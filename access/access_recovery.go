@@ -24,7 +24,7 @@ func (validator *Validator) readRecoveryFrom(recoveryFile string) {
 		return
 	}
 
-	log.Printf("Successfully recovered %d authorized users",
+	log.Printf("%d authorized users recovered",
 		len(validator.FuksAccess)+len(validator.SheetAccess))
 }
 

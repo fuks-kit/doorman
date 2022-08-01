@@ -27,4 +27,6 @@ func (validator *Validator) readFallbackFrom(fallbackPath string) {
 	validator.mu.Lock()
 	validator.FallbackAccess = generateAccessList(users)
 	validator.mu.Unlock()
+
+	log.Printf("%d fallback users read", len(validator.FallbackAccess))
 }
