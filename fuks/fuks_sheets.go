@@ -6,17 +6,10 @@ import (
 	"strings"
 )
 
-var spreadsheetId = ""
-
-// SetAuthUsersSheetId sets the spreadsheetId for external persons that have access to the office.
-func SetAuthUsersSheetId(sheetId string) {
-	spreadsheetId = sheetId
-}
-
 // GetAuthorisedSheetUsers fetches and pares a Google Sheet with names and KIT-Card numbers.
-func GetAuthorisedSheetUsers() (users []AuthorisedUser, _ error) {
-	if spreadsheetId == "" {
-		return nil, fmt.Errorf("SpreadsheetId='%s'", spreadsheetId)
+func GetAuthorisedSheetUsers(sheetId string) (users []AuthorisedUser, _ error) {
+	if sheetId == "" {
+		return nil, fmt.Errorf("SpreadsheetId='%s'", sheetId)
 	}
 
 	readRange := "A2:C"
@@ -24,11 +17,11 @@ func GetAuthorisedSheetUsers() (users []AuthorisedUser, _ error) {
 	resp, err := sheetsService.
 		Spreadsheets.
 		Values.
-		Get(spreadsheetId, readRange).
+		Get(sheetId, readRange).
 		Do()
 	if err != nil {
 		return nil, fmt.Errorf("unable to retrieve data from sheet: spreadsheetId=%s error=%v",
-			spreadsheetId, err)
+			sheetId, err)
 	}
 
 	//log.Printf("resp=%s", simple.PrettifyMarshaler(resp))
