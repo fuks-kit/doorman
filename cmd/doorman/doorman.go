@@ -40,12 +40,13 @@ func (config Config) GetOpenDoorDuration() time.Duration {
 	return duration
 }
 
-var config Config
-
 var (
+	config       Config
 	configPath   = flag.String("c", "config.json", "Config JSON path")
 	fallbackPath = flag.String("f", "fallback-access.json", "Default access JSON path")
 )
+
+const retryDuration = time.Second * 120
 
 func init() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
@@ -76,7 +77,8 @@ func main() {
 	// This update may fail because the Wi-Fi is not ready after an immediate start at system boot.
 	fail := validator.Update()
 	if fail {
-		time.Sleep(time.Second * 40)
+		log.Printf("Update failed: retry in %v", retryDuration)
+		time.Sleep(retryDuration)
 		validator.Update()
 	}
 
