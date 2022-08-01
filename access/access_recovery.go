@@ -30,7 +30,7 @@ func (validator *Validator) readRecoveryFrom(recoveryFile string) {
 
 func (validator *Validator) writeRecovery(recoveryFile string) {
 
-	log.Printf("Writing recovery to %s", recoveryFile)
+	//log.Printf("Writing recovery to %s", recoveryFile)
 
 	validator.mu.RLock()
 	defer validator.mu.RUnlock()
