@@ -3,47 +3,38 @@ package access
 import (
 	"github.com/fuks-kit/doorman/fuks"
 	"sync"
+	"time"
 )
+
+type Config struct {
+	UpdateInterval time.Duration
+	FallbackPath   string
+	RecoveryPath   string
+}
 
 type accessList = map[uint32]fuks.AuthorisedUser
 
 type Validator struct {
-	sync.RWMutex
+	mu             sync.RWMutex
 	FallbackAccess accessList `json:"-"`
-	FuksAccess     accessList `json:"fuks"`
-	SheetAccess    accessList `json:"sheet"`
+	FuksAccess     accessList `json:"fuks-access"`
+	SheetAccess    accessList `json:"sheet-access"`
 }
 
-func WithFallback(fallbackPath string) (auth *Validator) {
-	auth = &Validator{}
+func NewValidator(config Config) (validator Validator) {
+	validator = Validator{}
 
-	if fallbackPath != "" {
-		auth.FallbackAccess = readFallbackAccess(fallbackPath)
+	if config.FallbackPath != "" {
+		validator.fallbackFrom(config.FallbackPath)
 	}
 
-	auth.tryRecover()
+	if config.RecoveryPath != "" {
+		validator.readRecovery(config.RecoveryPath)
+	}
+
+	if config.UpdateInterval > 0 {
+		validator.startUpdater(config.UpdateInterval, config.RecoveryPath)
+	}
+
 	return
-}
-
-func WithoutFallback() (auth *Validator) {
-	return WithFallback("")
-}
-
-func (auth *Validator) CheckAccess(rfid uint32) (user fuks.AuthorisedUser, access bool) {
-	auth.RLock()
-	defer auth.RUnlock()
-
-	if user, access = auth.FallbackAccess[rfid]; access {
-		return user, access
-	}
-
-	if user, access = auth.FuksAccess[rfid]; access {
-		return user, access
-	}
-
-	if user, access = auth.SheetAccess[rfid]; access {
-		return user, access
-	}
-
-	return fuks.AuthorisedUser{}, false
 }

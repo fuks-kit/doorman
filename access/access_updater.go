@@ -6,35 +6,37 @@ import (
 	"time"
 )
 
-func (auth *Validator) Update() {
+func (validator *Validator) Update() {
 	log.Printf("Get authorised chip numbers")
 
 	if fuksUsers, err := fuks.GetAuthorisedFuksUsers(); err == nil {
-		auth.Lock()
-		auth.FuksAccess = generateAccessList(fuksUsers)
-		auth.Unlock()
+		validator.mu.Lock()
+		validator.FuksAccess = generateAccessList(fuksUsers)
+		validator.mu.Unlock()
 	} else {
 		log.Printf("Couldn't get authorised chip numbers from userdata: %v", err)
 	}
 
 	if sheetUsers, err := fuks.GetAuthorisedSheetUsers(); err == nil {
-		auth.Lock()
-		auth.SheetAccess = generateAccessList(sheetUsers)
-		auth.Unlock()
+		validator.mu.Lock()
+		validator.SheetAccess = generateAccessList(sheetUsers)
+		validator.mu.Unlock()
 	} else {
 		log.Printf("Couldn't get authorised chip numbers from sheet: %v", err)
 	}
-
-	auth.writeRecovery()
 }
 
-func (auth *Validator) StartUpdater(interval time.Duration) {
-	log.Printf("Start access updater (interval=%v)", interval)
+func (validator *Validator) startUpdater(interval time.Duration, recoveryFile string) {
+	log.Printf("Start access updater (interval=%v recovery=%s)", interval, recoveryFile)
 
 	go func() {
 		ticker := time.NewTicker(interval)
 		for range ticker.C {
-			auth.Update()
+			validator.Update()
+
+			if recoveryFile != "" {
+				validator.writeRecovery(recoveryFile)
+			}
 		}
 	}()
 }

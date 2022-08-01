@@ -6,31 +6,37 @@ import (
 	"log"
 )
 
-const recoveryFile = "doorman-recovery.json"
+func (validator *Validator) readRecovery(recoveryFile string) {
+	log.Printf("Try to recover authorized users from %s", recoveryFile)
 
-func (auth *Validator) tryRecover() {
-	log.Printf("Try to recover authorized users...")
+	validator.mu.Lock()
+	defer validator.mu.Unlock()
+
 	byt, err := ioutil.ReadFile(recoveryFile)
 	if err != nil {
+		log.Printf("Couldn't read %s: %v", recoveryFile, err)
 		return
 	}
 
-	log.Printf("Sourcing %s", recoveryFile)
-
-	err = json.Unmarshal(byt, &auth)
+	err = json.Unmarshal(byt, &validator)
 	if err != nil {
 		log.Printf("Couldn't unmarshal %s: %v", recoveryFile, err)
+		return
 	}
 }
 
-func (auth *Validator) writeRecovery() {
+func (validator *Validator) writeRecovery(recoveryFile string) {
 
-	byt, err := json.MarshalIndent(auth, "", "  ")
+	log.Printf("Writing recovery to %s", recoveryFile)
+
+	validator.mu.RLock()
+	defer validator.mu.RUnlock()
+
+	byt, err := json.MarshalIndent(validator, "", "  ")
 	if err != nil {
-		log.Fatalf("Couldn't write %s: %v", recoveryFile, err)
+		log.Fatalf("Couldn't write: %v", err)
 	}
 
-	log.Printf("Write %s", recoveryFile)
 	err = ioutil.WriteFile(recoveryFile, byt, 0644)
 	if err != nil {
 		log.Printf("Couldn't write %s: %v", recoveryFile, err)

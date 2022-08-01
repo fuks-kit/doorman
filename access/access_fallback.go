@@ -7,10 +7,11 @@ import (
 	"log"
 )
 
-func readFallbackAccess(file string) (fallback accessList) {
-	log.Printf("Reading fallback access file (%s)", file)
+func (validator *Validator) fallbackFrom(fallbackPath string) {
 
-	byt, err := ioutil.ReadFile(file)
+	log.Printf("Reading fallback access file (%s)", fallbackPath)
+
+	byt, err := ioutil.ReadFile(fallbackPath)
 	if err != nil {
 		log.Printf("Couldn't read access JSON: %v", err)
 		return
@@ -23,5 +24,7 @@ func readFallbackAccess(file string) (fallback accessList) {
 		return
 	}
 
-	return generateAccessList(users)
+	validator.mu.Lock()
+	validator.FallbackAccess = generateAccessList(users)
+	validator.mu.Unlock()
 }

@@ -29,7 +29,7 @@ func main() {
 		fuks.SetAuthUsersSheetId(*sheetId)
 	}
 
-	validator := access.WithoutFallback()
+	validator := access.NewValidator(access.Config{})
 	validator.Update()
 
 	users := map[string]interface{}{

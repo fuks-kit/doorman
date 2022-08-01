@@ -72,13 +72,17 @@ func main() {
 		fuks.SetAuthUsersSheetId(config.SheetId)
 	}
 
-	validator := access.WithFallback(*fallbackPath)
-	validator.StartUpdater(config.GetUpdateInterval())
+	validator := access.NewValidator(access.Config{
+		UpdateInterval: config.GetUpdateInterval(),
+		FallbackPath:   *fallbackPath,
+		RecoveryPath:   "doorman-recovery.json",
+	})
 
-	log.Printf("Listening for RFID events (%s)", config.InputDevice)
-	device := rfid.Reader(config.InputDevice)
+	// This update may fail because the Wi-Fi is not ready after an immediate start at system boot.
+	validator.Update()
 
 	openDoorDuration := config.GetOpenDoorDuration()
+	device := rfid.Reader(config.InputDevice)
 
 	log.Printf("----------------------------")
 	log.Printf("Doorman ready")
