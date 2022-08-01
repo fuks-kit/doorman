@@ -23,8 +23,10 @@ type Validator struct {
 	SheetAccess    accessList `json:"sheet-access"`
 }
 
-func NewValidator(config Config) (validator Validator) {
-	validator = Validator{
+func NewValidator(config Config) (validator *Validator) {
+	// Always export the Validators pointer,
+	// because otherwise updates are not persisted properly!
+	validator = &Validator{
 		SheetId: config.SheetId,
 	}
 
