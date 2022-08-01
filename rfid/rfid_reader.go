@@ -33,6 +33,7 @@ type Device struct {
 }
 
 func Reader(dev string) Device {
+	log.Printf("Staring new RFID reader on %s", dev)
 	inputDevice, err := os.Open(dev)
 	if err != nil {
 		log.Fatalln(err)
