@@ -7,7 +7,7 @@ import (
 )
 
 func (validator *Validator) readRecoveryFrom(recoveryFile string) {
-	log.Printf("Try to recover authorized users from %s", recoveryFile)
+	log.Printf("Trying to recover authorized users from %s", recoveryFile)
 
 	validator.mu.Lock()
 	defer validator.mu.Unlock()
@@ -23,6 +23,9 @@ func (validator *Validator) readRecoveryFrom(recoveryFile string) {
 		log.Printf("Couldn't unmarshal %s: %v", recoveryFile, err)
 		return
 	}
+
+	log.Printf("Successfully recovered %d authorized users",
+		len(validator.FuksAccess)+len(validator.SheetAccess))
 }
 
 func (validator *Validator) writeRecovery(recoveryFile string) {
