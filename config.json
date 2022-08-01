@@ -1,6 +1,6 @@
 {
   "input-device": "/dev/input/by-id/usb-IC_Reader_IC_Reader_08FF20171101-event-kbd",
-  "update-interval": "10m",
+  "update-interval": "5m",
   "open-door": "5s",
   "spreadsheet-id": "1eNZxLDzBPZDZ5JKI47ZoUlw8pB6C--7MQiRBxspO4EI"
 }
