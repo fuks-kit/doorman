@@ -50,9 +50,6 @@ var (
 func init() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 	flag.Parse()
-}
-
-func main() {
 
 	log.Printf("Doorman initialising...")
 
@@ -66,7 +63,9 @@ func main() {
 	if err != nil {
 		log.Fatalf("Cloudn't parse config file %s: %v", *configPath, err)
 	}
+}
 
+func main() {
 	validator := access.NewValidator(access.Config{
 		SheetId:        config.SheetId,
 		UpdateInterval: config.GetUpdateInterval(),
