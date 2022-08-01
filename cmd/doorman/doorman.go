@@ -5,7 +5,6 @@ import (
 	"flag"
 	"github.com/fuks-kit/doorman/access"
 	"github.com/fuks-kit/doorman/door"
-	"github.com/fuks-kit/doorman/fuks"
 	"github.com/fuks-kit/doorman/rfid"
 	"io/ioutil"
 	"log"
@@ -68,11 +67,8 @@ func main() {
 		log.Fatalf("Cloudn't parse config file %s: %v", *configPath, err)
 	}
 
-	if config.SheetId != "" {
-		fuks.SetAuthUsersSheetId(config.SheetId)
-	}
-
 	validator := access.NewValidator(access.Config{
+		SheetId:        config.SheetId,
 		UpdateInterval: config.GetUpdateInterval(),
 		FallbackPath:   *fallbackPath,
 		RecoveryPath:   "doorman-recovery.json",

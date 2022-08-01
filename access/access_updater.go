@@ -17,7 +17,7 @@ func (validator *Validator) Update() {
 		log.Printf("Couldn't get authorised chip numbers from userdata: %v", err)
 	}
 
-	if sheetUsers, err := fuks.GetAuthorisedSheetUsers(); err == nil {
+	if sheetUsers, err := fuks.GetAuthorisedSheetUsers(validator.SheetId); err == nil {
 		validator.mu.Lock()
 		validator.SheetAccess = generateAccessList(sheetUsers)
 		validator.mu.Unlock()

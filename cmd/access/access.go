@@ -5,7 +5,6 @@ import (
 	"flag"
 	"fmt"
 	"github.com/fuks-kit/doorman/access"
-	"github.com/fuks-kit/doorman/fuks"
 	"io/ioutil"
 	"log"
 )
@@ -25,11 +24,9 @@ func init() {
 func main() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 
-	if *sheetId != "" {
-		fuks.SetAuthUsersSheetId(*sheetId)
-	}
-
-	validator := access.NewValidator(access.Config{})
+	validator := access.NewValidator(access.Config{
+		SheetId: *sheetId,
+	})
 	validator.Update()
 
 	users := map[string]interface{}{
