@@ -66,6 +66,10 @@ Run ```sudo systemctl enable doorman``` to start the doorman service on startup
 cat /var/log/doorman.log
 # Find Raspberry Pi
 sudo nmap -PE 10.0.0.0/24
+# Clean up debug procedure:
+sudo service doorman stop
+sudo rm /var/log/doorman.log
+sudo rm ~/doorman-recovery.json
 ```
 
 ## Cross compile executables
@@ -74,6 +78,5 @@ sudo nmap -PE 10.0.0.0/24
 rm -rf bin
 mkdir -p bin
 GOOS=linux GOARCH=arm go build -o bin/doorman cmd/doorman/doorman.go
-GOOS=linux GOARCH=arm go build -o bin/rfid cmd/rfid/rfid.go
-GOOS=linux GOARCH=arm go build -o bin/door cmd/door/door.go
+scp bin/doorman fuks@10.0.0.238:~/go/bin
 ```
