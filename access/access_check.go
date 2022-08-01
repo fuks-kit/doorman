@@ -1,6 +1,8 @@
 package access
 
-import "github.com/fuks-kit/doorman/fuks"
+import (
+	"github.com/fuks-kit/doorman/fuks"
+)
 
 func (validator *Validator) CheckAccess(rfid uint32) (user fuks.AuthorisedUser, access bool) {
 	validator.mu.RLock()

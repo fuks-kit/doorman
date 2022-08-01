@@ -52,9 +52,10 @@ func init() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 	flag.Parse()
 
+	log.Printf("----------------------------------------------")
 	log.Printf("Doorman initialising...")
 
-	log.Printf("Sourcing config file...")
+	log.Printf("Source config file...")
 	byt, err := ioutil.ReadFile(*configPath)
 	if err != nil {
 		log.Fatalf("Cloudn't read config file %s: %v", *configPath, err)
@@ -87,9 +88,7 @@ func main() {
 	openDoorDuration := config.GetOpenDoorDuration()
 	device := rfid.Reader(config.InputDevice)
 
-	log.Printf("----------------------------")
 	log.Printf("Doorman ready")
-	log.Printf("----------------------------")
 
 	for id := range device.ReadIdentifiers() {
 		log.Printf("Access event: RFID=0x%08x", id)

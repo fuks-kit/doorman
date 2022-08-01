@@ -9,7 +9,7 @@ import (
 
 func (validator *Validator) readFallbackFrom(fallbackPath string) {
 
-	log.Printf("Reading fallback access file (%s)", fallbackPath)
+	log.Printf("Read fallback access file (%s)", fallbackPath)
 
 	byt, err := ioutil.ReadFile(fallbackPath)
 	if err != nil {
