@@ -36,6 +36,7 @@ The generated JSON must be placed under ```fuks/credentials.json``` and will be 
 ## Compile and install Doorman CLI
 
 ```shell
+git pull
 go get all
 
 go install cmd/doorman/doorman.go
