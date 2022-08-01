@@ -49,10 +49,9 @@ func main() {
 
 	if *sheetId != "" {
 		log.Printf("Fetch authorised users from sheet (%s)", *sheetId)
-		fuks.SetAuthUsersSheetId(*sheetId)
 
 		start = time.Now()
-		users, err = fuks.GetAuthorisedSheetUsers()
+		users, err = fuks.GetAuthorisedSheetUsers(*sheetId)
 		if err != nil {
 			log.Fatalf("cloudn't fetch users: %s", err)
 		}
