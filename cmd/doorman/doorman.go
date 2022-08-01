@@ -78,8 +78,10 @@ func main() {
 	fail := validator.Update()
 	if fail {
 		log.Printf("Update failed: retry in %v", retryDuration)
-		time.Sleep(retryDuration)
-		validator.Update()
+		go func() {
+			time.Sleep(retryDuration)
+			validator.Update()
+		}()
 	}
 
 	openDoorDuration := config.GetOpenDoorDuration()
