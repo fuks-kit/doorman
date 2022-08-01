@@ -29,11 +29,11 @@ func NewValidator(config Config) (validator Validator) {
 	}
 
 	if config.FallbackPath != "" {
-		validator.fallbackFrom(config.FallbackPath)
+		validator.readFallbackFrom(config.FallbackPath)
 	}
 
 	if config.RecoveryPath != "" {
-		validator.readRecovery(config.RecoveryPath)
+		validator.readRecoveryFrom(config.RecoveryPath)
 	}
 
 	if config.UpdateInterval > 0 {

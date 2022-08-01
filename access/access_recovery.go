@@ -6,7 +6,7 @@ import (
 	"log"
 )
 
-func (validator *Validator) readRecovery(recoveryFile string) {
+func (validator *Validator) readRecoveryFrom(recoveryFile string) {
 	log.Printf("Try to recover authorized users from %s", recoveryFile)
 
 	validator.mu.Lock()

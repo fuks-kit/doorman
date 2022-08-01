@@ -7,7 +7,7 @@ import (
 	"log"
 )
 
-func (validator *Validator) fallbackFrom(fallbackPath string) {
+func (validator *Validator) readFallbackFrom(fallbackPath string) {
 
 	log.Printf("Reading fallback access file (%s)", fallbackPath)
 
