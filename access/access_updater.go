@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func (validator *Validator) Update() {
+func (validator *Validator) Update() (fail bool) {
 	log.Printf("Update authorised chip numbers")
 
 	if fuksUsers, err := fuks.GetAuthorisedFuksUsers(); err == nil {
@@ -15,6 +15,7 @@ func (validator *Validator) Update() {
 		validator.mu.Unlock()
 	} else {
 		log.Printf("Couldn't get authorised chip numbers from userdata: %v", err)
+		fail = true
 	}
 
 	if sheetUsers, err := fuks.GetAuthorisedSheetUsers(validator.SheetId); err == nil {
@@ -23,7 +24,10 @@ func (validator *Validator) Update() {
 		validator.mu.Unlock()
 	} else {
 		log.Printf("Couldn't get authorised chip numbers from sheet: %v", err)
+		fail = true
 	}
+
+	return
 }
 
 func (validator *Validator) startUpdater(interval time.Duration, recoveryFile string) {

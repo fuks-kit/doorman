@@ -74,7 +74,11 @@ func main() {
 	})
 
 	// This update may fail because the Wi-Fi is not ready after an immediate start at system boot.
-	validator.Update()
+	fail := validator.Update()
+	if fail {
+		time.Sleep(time.Second * 40)
+		validator.Update()
+	}
 
 	openDoorDuration := config.GetOpenDoorDuration()
 	device := rfid.Reader(config.InputDevice)
