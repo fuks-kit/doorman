@@ -21,7 +21,7 @@ func init() {
 	flag.Parse()
 }
 
-func output(users []fuks.AuthorisedUser) {
+func output(users []workspace.AuthorisedUser) {
 	log.Printf("--> Users %v", len(users))
 
 	sort.Slice(users, func(i, j int) bool {
@@ -39,7 +39,7 @@ func output(users []fuks.AuthorisedUser) {
 func main() {
 	log.Printf("Fetch authorised fuks users...")
 	start := time.Now()
-	users, err := fuks.GetAuthorisedFuksUsers()
+	users, err := workspace.GetAuthorisedFuksUsers()
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -51,7 +51,7 @@ func main() {
 		log.Printf("Fetch authorised users from sheet (%s)", *sheetId)
 
 		start = time.Now()
-		users, err = fuks.GetAuthorisedSheetUsers(*sheetId)
+		users, err = workspace.GetAuthorisedSheetUsers(*sheetId)
 		if err != nil {
 			log.Fatalf("cloudn't fetch users: %s", err)
 		}

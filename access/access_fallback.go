@@ -17,7 +17,7 @@ func (validator *Validator) readFallbackFrom(fallbackPath string) {
 		return
 	}
 
-	var users []fuks.AuthorisedUser
+	var users []workspace.AuthorisedUser
 	err = json.Unmarshal(byt, &users)
 	if err != nil {
 		log.Printf("Couldn't unmarshal fallback JSON: %v", err)

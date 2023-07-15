@@ -13,7 +13,7 @@ type Config struct {
 	SheetId        string
 }
 
-type accessList = map[uint32]fuks.AuthorisedUser
+type accessList = map[uint32]workspace.AuthorisedUser
 
 type Validator struct {
 	mu             sync.RWMutex

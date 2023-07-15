@@ -1,4 +1,4 @@
-package fuks
+package workspace
 
 import (
 	"fmt"
