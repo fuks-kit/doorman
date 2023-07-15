@@ -2,7 +2,7 @@ package access
 
 import (
 	"encoding/binary"
-	"github.com/fuks-kit/doorman/fuks"
+	"github.com/fuks-kit/doorman/workspace"
 )
 
 // generateAccessList generates a map with valid access RFIDs

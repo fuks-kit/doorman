@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/json"
 	"flag"
-	"github.com/fuks-kit/doorman/fuks"
+	"github.com/fuks-kit/doorman/workspace"
 	"log"
 	"sort"
 	"time"

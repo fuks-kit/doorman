@@ -2,7 +2,7 @@ package access
 
 import (
 	"encoding/json"
-	"github.com/fuks-kit/doorman/fuks"
+	"github.com/fuks-kit/doorman/workspace"
 	"io/ioutil"
 	"log"
 )

@@ -1,7 +1,7 @@
 package access
 
 import (
-	"github.com/fuks-kit/doorman/fuks"
+	"github.com/fuks-kit/doorman/workspace"
 	"log"
 	"time"
 )
