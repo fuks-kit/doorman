@@ -20,13 +20,15 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Doorman_OpenDoor_FullMethodName = "/endpoints.doorman.Doorman/OpenDoor"
+	Doorman_CheckAccount_FullMethodName = "/endpoints.doorman.Doorman/CheckAccount"
+	Doorman_OpenDoor_FullMethodName     = "/endpoints.doorman.Doorman/OpenDoor"
 )
 
 // DoormanClient is the client API for Doorman service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type DoormanClient interface {
+	CheckAccount(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*AccountState, error)
 	OpenDoor(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*DoorState, error)
 }
 
@@ -36,6 +38,15 @@ type doormanClient struct {
 
 func NewDoormanClient(cc grpc.ClientConnInterface) DoormanClient {
 	return &doormanClient{cc}
+}
+
+func (c *doormanClient) CheckAccount(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*AccountState, error) {
+	out := new(AccountState)
+	err := c.cc.Invoke(ctx, Doorman_CheckAccount_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *doormanClient) OpenDoor(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*DoorState, error) {
@@ -51,6 +62,7 @@ func (c *doormanClient) OpenDoor(ctx context.Context, in *emptypb.Empty, opts ..
 // All implementations must embed UnimplementedDoormanServer
 // for forward compatibility
 type DoormanServer interface {
+	CheckAccount(context.Context, *emptypb.Empty) (*AccountState, error)
 	OpenDoor(context.Context, *emptypb.Empty) (*DoorState, error)
 	mustEmbedUnimplementedDoormanServer()
 }
@@ -59,6 +71,9 @@ type DoormanServer interface {
 type UnimplementedDoormanServer struct {
 }
 
+func (UnimplementedDoormanServer) CheckAccount(context.Context, *emptypb.Empty) (*AccountState, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CheckAccount not implemented")
+}
 func (UnimplementedDoormanServer) OpenDoor(context.Context, *emptypb.Empty) (*DoorState, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method OpenDoor not implemented")
 }
@@ -73,6 +88,24 @@ type UnsafeDoormanServer interface {
 
 func RegisterDoormanServer(s grpc.ServiceRegistrar, srv DoormanServer) {
 	s.RegisterService(&Doorman_ServiceDesc, srv)
+}
+
+func _Doorman_CheckAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DoormanServer).CheckAccount(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Doorman_CheckAccount_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DoormanServer).CheckAccount(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _Doorman_OpenDoor_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -100,6 +133,10 @@ var Doorman_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "endpoints.doorman.Doorman",
 	HandlerType: (*DoormanServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "CheckAccount",
+			Handler:    _Doorman_CheckAccount_Handler,
+		},
 		{
 			MethodName: "OpenDoor",
 			Handler:    _Doorman_OpenDoor_Handler,
