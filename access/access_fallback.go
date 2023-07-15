@@ -3,15 +3,15 @@ package access
 import (
 	"encoding/json"
 	"github.com/fuks-kit/doorman/workspace"
-	"io/ioutil"
 	"log"
+	"os"
 )
 
 func (validator *Validator) readFallbackFrom(fallbackPath string) {
 
 	log.Printf("Read fallback access file (%s)", fallbackPath)
 
-	byt, err := ioutil.ReadFile(fallbackPath)
+	byt, err := os.ReadFile(fallbackPath)
 	if err != nil {
 		log.Printf("Couldn't read access JSON: %v", err)
 		return
