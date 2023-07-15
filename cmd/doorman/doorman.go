@@ -6,8 +6,8 @@ import (
 	"github.com/fuks-kit/doorman/access"
 	"github.com/fuks-kit/doorman/door"
 	"github.com/fuks-kit/doorman/rfid"
-	"io/ioutil"
 	"log"
+	"os"
 	"time"
 )
 
@@ -56,7 +56,7 @@ func init() {
 	log.Printf("Doorman initialising...")
 
 	log.Printf("Source config file...")
-	byt, err := ioutil.ReadFile(*configPath)
+	byt, err := os.ReadFile(*configPath)
 	if err != nil {
 		log.Fatalf("Cloudn't read config file %s: %v", *configPath, err)
 	}

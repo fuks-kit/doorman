@@ -5,8 +5,8 @@ import (
 	"flag"
 	"fmt"
 	"github.com/fuks-kit/doorman/access"
-	"io/ioutil"
 	"log"
+	"os"
 )
 
 var (
@@ -54,7 +54,7 @@ func main() {
 
 	fmt.Println(string(out))
 
-	err = ioutil.WriteFile("dump.access.json", out, 0644)
+	err = os.WriteFile("dump.access.json", out, 0644)
 	if err != nil {
 		log.Fatalln(err)
 	}
