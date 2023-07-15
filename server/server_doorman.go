@@ -5,6 +5,7 @@ import (
 	pb "github.com/fuks-kit/doorman/proto"
 	fuks "github.com/fuks-kit/doorman/workspace"
 	"google.golang.org/protobuf/types/known/emptypb"
+	"log"
 )
 
 type DoormanServer struct {
@@ -36,4 +37,9 @@ func (server *DoormanServer) CheckAccount(ctx context.Context, _ *emptypb.Empty)
 	return &pb.AccountState{
 		HasAccess: access,
 	}, nil
+}
+
+func (server *DoormanServer) OpenDoor(ctx context.Context, _ *emptypb.Empty) (*pb.DoorState, error) {
+	log.Printf("OpenDoor")
+	return &pb.DoorState{}, nil
 }
