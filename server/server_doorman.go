@@ -31,6 +31,8 @@ func (server *DoormanServer) CheckAccount(ctx context.Context, _ *emptypb.Empty)
 		return nil, err
 	}
 
+	// TODO: Add state infos
+
 	return &pb.AccountState{
 		HasAccess: access,
 	}, nil

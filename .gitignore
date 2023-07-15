@@ -19,6 +19,7 @@ token.json
 
 # Don't checkin service account credentials!
 credentials.json
+firebase-credentials.json
 
 dump/
 dump.*

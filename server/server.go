@@ -2,26 +2,22 @@ package server
 
 import (
 	"context"
+	_ "embed"
 	firebase "firebase.google.com/go/v4"
 	"firebase.google.com/go/v4/auth"
 	"google.golang.org/api/option"
 	"log"
-	"os"
 )
 
-const credentials = "serviceAccount.json"
+//go:embed firebase-credentials.json
+var credentials []byte
 
 var authClient *auth.Client
 
 func init() {
-
 	ctx := context.Background()
-	var opts []option.ClientOption
-
-	// Use service account if present
-	if _, err := os.Stat(credentials); err == nil {
-		serviceAccount := option.WithCredentialsFile(credentials)
-		opts = append(opts, serviceAccount)
+	opts := []option.ClientOption{
+		option.WithCredentialsJSON(credentials),
 	}
 
 	app, err := firebase.NewApp(ctx, nil, opts...)
