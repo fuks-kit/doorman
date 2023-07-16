@@ -15,7 +15,7 @@ service Doorman {
 
 message OfficePermission {
   bool has_access = 1;
-  bool is_fuks = 2;
+  bool is_fuks_member = 2;
   bool is_active_fuks = 3;
 }
 
