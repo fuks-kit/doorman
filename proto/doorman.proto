@@ -9,20 +9,14 @@ option go_package = "./proto";
 package endpoints.doorman;
 
 service Doorman {
-  rpc CheckAccount(google.protobuf.Empty) returns (AccountState);
+  rpc CheckAccount(google.protobuf.Empty) returns (OfficePermission);
   rpc OpenDoor(google.protobuf.Empty) returns (DoorState);
 }
 
-enum Organization {
-  UNKNOWN = 0;
-  FUKS = 1;
-  VWI = 2;
-}
-
-message AccountState {
-  Organization organization = 1;
-  bool has_access = 2;
-  optional bool active_fuks_member = 3;
+message OfficePermission {
+  bool has_access = 1;
+  bool is_fuks = 2;
+  bool is_active_fuks = 3;
 }
 
 message DoorState {

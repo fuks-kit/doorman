@@ -28,7 +28,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type DoormanClient interface {
-	CheckAccount(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*AccountState, error)
+	CheckAccount(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*OfficePermission, error)
 	OpenDoor(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*DoorState, error)
 }
 
@@ -40,8 +40,8 @@ func NewDoormanClient(cc grpc.ClientConnInterface) DoormanClient {
 	return &doormanClient{cc}
 }
 
-func (c *doormanClient) CheckAccount(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*AccountState, error) {
-	out := new(AccountState)
+func (c *doormanClient) CheckAccount(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*OfficePermission, error) {
+	out := new(OfficePermission)
 	err := c.cc.Invoke(ctx, Doorman_CheckAccount_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -62,7 +62,7 @@ func (c *doormanClient) OpenDoor(ctx context.Context, in *emptypb.Empty, opts ..
 // All implementations must embed UnimplementedDoormanServer
 // for forward compatibility
 type DoormanServer interface {
-	CheckAccount(context.Context, *emptypb.Empty) (*AccountState, error)
+	CheckAccount(context.Context, *emptypb.Empty) (*OfficePermission, error)
 	OpenDoor(context.Context, *emptypb.Empty) (*DoorState, error)
 	mustEmbedUnimplementedDoormanServer()
 }
@@ -71,7 +71,7 @@ type DoormanServer interface {
 type UnimplementedDoormanServer struct {
 }
 
-func (UnimplementedDoormanServer) CheckAccount(context.Context, *emptypb.Empty) (*AccountState, error) {
+func (UnimplementedDoormanServer) CheckAccount(context.Context, *emptypb.Empty) (*OfficePermission, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CheckAccount not implemented")
 }
 func (UnimplementedDoormanServer) OpenDoor(context.Context, *emptypb.Empty) (*DoorState, error) {
