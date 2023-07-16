@@ -7,8 +7,6 @@ import (
 )
 
 func (validator *Validator) Update() (fail bool) {
-	log.Printf("Update authorised chip numbers...")
-
 	if fuksUsers, err := workspace.GetAuthorisedFuksUsers(); err == nil {
 		validator.mu.Lock()
 		validator.FuksAccess = generateAccessList(fuksUsers)
