@@ -1,34 +1,43 @@
 package workspace
 
 import (
-	"log"
 	"strings"
 )
 
+// isGroupMember checks if the given email is a member of the given group.
+func isGroupMember(group, email string) (isMember bool, _ error) {
+	member, err := adminService.Members.HasMember(group, email).Do()
+	if err != nil {
+		return false, err
+	}
+
+	return member.IsMember, nil
+}
+
+// checkFuksAccess checks if the given email has permission to access the office.
 func checkFuksAccess(email string) (access bool, _ error) {
 	user, err := adminService.Users.Get(email).Do()
 	if err != nil {
 		return false, err
 	}
 
-	if user.IsAdmin {
-		return true, nil
-	}
+	// TODO: Uncomment this
+	// if user.IsAdmin {
+	// 	 return true, nil
+	// }
 
 	if user.OrgUnitPath == "/aktive" {
 		return true, nil
 	}
 
 	// Check group membership
-	group, err := adminService.Members.Get("aktive@fuks.org", email).Do()
+
+	member, err := isGroupMember("aktive@fuks.org", email)
 	if err != nil {
 		return false, err
 	}
 
-	// TODO: Check if user is member of "aktive" group
-	log.Printf("########### group=%v", group)
-
-	return false, nil
+	return member, nil
 }
 
 func checkExternalAccess(uid, email string) (access bool, _ error) {
