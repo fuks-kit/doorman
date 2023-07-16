@@ -9,6 +9,7 @@ import (
 
 var lock sync.Mutex
 
+// Open opens the office door for the given duration.
 func Open(duration time.Duration) {
 	if duration <= 0 {
 		return
