@@ -1,7 +1,7 @@
 ## Shipping package
 ## Assumes user is on MacOS, if other OS, please change PROTO_ROOT_DIR to the path of protobuf installation
 PROTO_ROOT_DIR = $(shell brew --prefix)/Cellar/protobuf/23.4/include
-APP_DIR = /Users/patrick/GitHub/workout_app/lib/proto
+APP_DIR = /Users/patrick/Code/fuks_app/lib/generated
 
 ## Dart requires you to manually ship all google provided proto files too.
 _gendart:
