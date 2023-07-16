@@ -18,8 +18,7 @@ type SheetAppUser struct {
 	Organization string
 }
 
-// GetAuthorisedSheetUsers fetches and pares a Google Sheet with names and KIT-Card numbers.
-func GetAuthorisedSheetUsers(sheetId string) (users []AuthorisedUser, _ error) {
+func GetAuthChipNumbersFromSheet(sheetId string) (users []AuthorisedUser, _ error) {
 	if sheetId == "" {
 		return nil, fmt.Errorf("SpreadsheetId='%s'", sheetId)
 	}

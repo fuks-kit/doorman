@@ -51,7 +51,7 @@ func main() {
 		log.Printf("Fetch authorised users from sheet (%s)", *sheetId)
 
 		start = time.Now()
-		users, err = workspace.GetAuthorisedSheetUsers(*sheetId)
+		users, err = workspace.GetAuthChipNumbersFromSheet(*sheetId)
 		if err != nil {
 			log.Fatalf("cloudn't fetch users: %s", err)
 		}

@@ -18,7 +18,7 @@ func (validator *Validator) Update() (fail bool) {
 		fail = true
 	}
 
-	if sheetUsers, err := workspace.GetAuthorisedSheetUsers(validator.SheetId); err == nil {
+	if sheetUsers, err := workspace.GetAuthChipNumbersFromSheet(validator.SheetId); err == nil {
 		validator.mu.Lock()
 		validator.SheetAccess = generateAccessList(sheetUsers)
 		validator.mu.Unlock()
