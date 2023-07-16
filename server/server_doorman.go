@@ -2,10 +2,12 @@ package server
 
 import (
 	"context"
+	"fmt"
 	pb "github.com/fuks-kit/doorman/proto"
-	"github.com/fuks-kit/doorman/workspace"
+	"google.golang.org/protobuf/types/known/durationpb"
 	"google.golang.org/protobuf/types/known/emptypb"
 	"log"
+	"time"
 )
 
 type DoormanServer struct {
@@ -16,32 +18,39 @@ func NewDoormanServer() *DoormanServer {
 	return &DoormanServer{}
 }
 
-func (server *DoormanServer) CheckAccount(ctx context.Context, _ *emptypb.Empty) (*pb.AccountState, error) {
-	log.Printf("CheckAccount:")
+func (server *DoormanServer) CheckPermissions(ctx context.Context, _ *emptypb.Empty) (*pb.OfficePermission, error) {
+	log.Printf("CheckPermissions:")
 
-	token, err := verifyCredentials(ctx)
+	permission, err := verifyPermission(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	user, err := authClient.GetUser(ctx, token.UID)
-	if err != nil {
-		return nil, err
-	}
-
-	access, err := workspace.HasOfficeAccess(token.UID, user.Email)
-	if err != nil {
-		return nil, err
-	}
-
-	// TODO: Add state infos
-
-	return &pb.AccountState{
-		HasAccess: access.HasAccess,
+	return &pb.OfficePermission{
+		HasAccess:    permission.HasAccess,
+		IsFuksMember: permission.IsFuksMember,
+		IsActiveFuks: permission.IsFuksMember,
 	}, nil
 }
 
 func (server *DoormanServer) OpenDoor(ctx context.Context, _ *emptypb.Empty) (*pb.DoorState, error) {
 	log.Printf("OpenDoor:")
-	return &pb.DoorState{}, nil
+
+	permission, err := verifyPermission(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	if !permission.HasAccess {
+		return nil, fmt.Errorf("access denied")
+	}
+
+	accessDuration := time.Second * 5
+	// TODO: uncomment when door is connected
+	// go door.Open(accessDuration)
+
+	return &pb.DoorState{
+		Open:         true,
+		OpenDuration: durationpb.New(accessDuration),
+	}, nil
 }
