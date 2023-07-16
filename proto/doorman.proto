@@ -9,7 +9,7 @@ option go_package = "./proto";
 package endpoints.doorman;
 
 service Doorman {
-  rpc CheckAccount(google.protobuf.Empty) returns (OfficePermission);
+  rpc CheckPermissions(google.protobuf.Empty) returns (OfficePermission);
   rpc OpenDoor(google.protobuf.Empty) returns (DoorState);
 }
 

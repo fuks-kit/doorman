@@ -20,15 +20,15 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Doorman_CheckAccount_FullMethodName = "/endpoints.doorman.Doorman/CheckAccount"
-	Doorman_OpenDoor_FullMethodName     = "/endpoints.doorman.Doorman/OpenDoor"
+	Doorman_CheckPermissions_FullMethodName = "/endpoints.doorman.Doorman/CheckPermissions"
+	Doorman_OpenDoor_FullMethodName         = "/endpoints.doorman.Doorman/OpenDoor"
 )
 
 // DoormanClient is the client API for Doorman service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type DoormanClient interface {
-	CheckAccount(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*OfficePermission, error)
+	CheckPermissions(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*OfficePermission, error)
 	OpenDoor(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*DoorState, error)
 }
 
@@ -40,9 +40,9 @@ func NewDoormanClient(cc grpc.ClientConnInterface) DoormanClient {
 	return &doormanClient{cc}
 }
 
-func (c *doormanClient) CheckAccount(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*OfficePermission, error) {
+func (c *doormanClient) CheckPermissions(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*OfficePermission, error) {
 	out := new(OfficePermission)
-	err := c.cc.Invoke(ctx, Doorman_CheckAccount_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, Doorman_CheckPermissions_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -62,7 +62,7 @@ func (c *doormanClient) OpenDoor(ctx context.Context, in *emptypb.Empty, opts ..
 // All implementations must embed UnimplementedDoormanServer
 // for forward compatibility
 type DoormanServer interface {
-	CheckAccount(context.Context, *emptypb.Empty) (*OfficePermission, error)
+	CheckPermissions(context.Context, *emptypb.Empty) (*OfficePermission, error)
 	OpenDoor(context.Context, *emptypb.Empty) (*DoorState, error)
 	mustEmbedUnimplementedDoormanServer()
 }
@@ -71,8 +71,8 @@ type DoormanServer interface {
 type UnimplementedDoormanServer struct {
 }
 
-func (UnimplementedDoormanServer) CheckAccount(context.Context, *emptypb.Empty) (*OfficePermission, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CheckAccount not implemented")
+func (UnimplementedDoormanServer) CheckPermissions(context.Context, *emptypb.Empty) (*OfficePermission, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CheckPermissions not implemented")
 }
 func (UnimplementedDoormanServer) OpenDoor(context.Context, *emptypb.Empty) (*DoorState, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method OpenDoor not implemented")
@@ -90,20 +90,20 @@ func RegisterDoormanServer(s grpc.ServiceRegistrar, srv DoormanServer) {
 	s.RegisterService(&Doorman_ServiceDesc, srv)
 }
 
-func _Doorman_CheckAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Doorman_CheckPermissions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DoormanServer).CheckAccount(ctx, in)
+		return srv.(DoormanServer).CheckPermissions(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Doorman_CheckAccount_FullMethodName,
+		FullMethod: Doorman_CheckPermissions_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DoormanServer).CheckAccount(ctx, req.(*emptypb.Empty))
+		return srv.(DoormanServer).CheckPermissions(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -134,8 +134,8 @@ var Doorman_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*DoormanServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "CheckAccount",
-			Handler:    _Doorman_CheckAccount_Handler,
+			MethodName: "CheckPermissions",
+			Handler:    _Doorman_CheckPermissions_Handler,
 		},
 		{
 			MethodName: "OpenDoor",
