@@ -18,11 +18,7 @@ type SheetAppUser struct {
 	Organization string
 }
 
-func GetAuthChipNumbersFromSheet(sheetId string) (users []AuthorisedUser, _ error) {
-	if sheetId == "" {
-		return nil, fmt.Errorf("SpreadsheetId='%s'", sheetId)
-	}
-
+func GetAuthChipNumbersFromSheet() (users []AuthorisedUser, _ error) {
 	readRange := cardSheet + "!A2:C"
 
 	resp, err := sheetsService.

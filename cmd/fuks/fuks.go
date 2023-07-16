@@ -9,13 +9,6 @@ import (
 	"time"
 )
 
-var (
-	sheetId = flag.String(
-		"s",
-		"1eNZxLDzBPZDZ5JKI47ZoUlw8pB6C--7MQiRBxspO4EI",
-		"Sheet-Id for list with access data")
-)
-
 func init() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 	flag.Parse()
@@ -47,16 +40,14 @@ func main() {
 	log.Printf("--> Fetch duration %v", time.Now().Sub(start))
 	output(users)
 
-	if *sheetId != "" {
-		log.Printf("Fetch authorised users from sheet (%s)", *sheetId)
+	log.Printf("Fetch authorised users from sheet...")
 
-		start = time.Now()
-		users, err = workspace.GetAuthChipNumbersFromSheet(*sheetId)
-		if err != nil {
-			log.Fatalf("cloudn't fetch users: %s", err)
-		}
-
-		log.Printf("--> Fetch duration %v", time.Now().Sub(start))
-		output(users)
+	start = time.Now()
+	users, err = workspace.GetAuthChipNumbersFromSheet()
+	if err != nil {
+		log.Fatalf("cloudn't fetch users: %s", err)
 	}
+
+	log.Printf("--> Fetch duration %v", time.Now().Sub(start))
+	output(users)
 }

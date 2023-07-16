@@ -10,11 +10,6 @@ import (
 )
 
 var (
-	sheetId = flag.String(
-		"s",
-		"1eNZxLDzBPZDZ5JKI47ZoUlw8pB6C--7MQiRBxspO4EI",
-		"SheetAccess-Id for list with access data")
-
 	recoveryPath = flag.String(
 		"r",
 		"doorman-recovery.json",
@@ -35,7 +30,6 @@ func main() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 
 	validator := access.NewValidator(access.Config{
-		SheetId:      *sheetId,
 		RecoveryPath: *recoveryPath,
 		FallbackPath: *fallbackPath,
 	})

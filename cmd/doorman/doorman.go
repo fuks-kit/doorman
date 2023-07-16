@@ -18,8 +18,6 @@ type Config struct {
 	UpdateInterval string `json:"update-interval"`
 	// Open door duration
 	OpenDoor string `json:"open-door"`
-	// Sheet-Id for list with chip numbers
-	SheetId string `json:"spreadsheet-id"`
 }
 
 func (config Config) GetUpdateInterval() time.Duration {
@@ -69,7 +67,6 @@ func init() {
 
 func main() {
 	validator := access.NewValidator(access.Config{
-		SheetId:        config.SheetId,
 		UpdateInterval: config.GetUpdateInterval(),
 		FallbackPath:   *fallbackPath,
 		RecoveryPath:   "doorman-recovery.json",

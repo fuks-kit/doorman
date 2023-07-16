@@ -10,14 +10,12 @@ type Config struct {
 	UpdateInterval time.Duration
 	FallbackPath   string
 	RecoveryPath   string
-	SheetId        string
 }
 
 type accessList = map[uint32]workspace.AuthorisedUser
 
 type Validator struct {
 	mu             sync.RWMutex
-	SheetId        string     `json:"-"`
 	FallbackAccess accessList `json:"-"`
 	FuksAccess     accessList `json:"fuks-access"`
 	SheetAccess    accessList `json:"sheet-access"`
@@ -26,9 +24,7 @@ type Validator struct {
 func NewValidator(config Config) (validator *Validator) {
 	// Always export the Validators pointer,
 	// because otherwise updates are not persisted properly!
-	validator = &Validator{
-		SheetId: config.SheetId,
-	}
+	validator = &Validator{}
 
 	if config.FallbackPath != "" {
 		validator.readFallbackFrom(config.FallbackPath)
