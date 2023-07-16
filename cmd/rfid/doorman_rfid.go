@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/json"
 	"flag"
-	"github.com/fuks-kit/doorman/rfid"
+	"github.com/fuks-kit/doorman/chipcard/rfid"
 	"log"
 )
 

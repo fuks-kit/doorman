@@ -3,9 +3,9 @@ package main
 import (
 	"encoding/json"
 	"flag"
-	"github.com/fuks-kit/doorman/access"
+	"github.com/fuks-kit/doorman/chipcard/access"
+	"github.com/fuks-kit/doorman/chipcard/rfid"
 	"github.com/fuks-kit/doorman/door"
-	"github.com/fuks-kit/doorman/rfid"
 	"log"
 	"os"
 	"time"
