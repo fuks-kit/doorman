@@ -4,10 +4,12 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3020fd9f-3abb-4360-9dbe-05d30c95f448" name="Changes" comment="IDE stuff">
-      <change afterPath="$PROJECT_DIR$/config/config.go" afterDir="false" />
+    <list default="true" id="3020fd9f-3abb-4360-9dbe-05d30c95f448" name="Changes" comment="Remove log">
+      <change afterPath="$PROJECT_DIR$/chipcard/deamon.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/chipcard/rfid/rfid_reader.go" beforeDir="false" afterPath="$PROJECT_DIR$/chipcard/rfid/rfid_reader.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmd/doorman/doorman.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/doorman/doorman.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/rfid/doorman_rfid.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/rfid/doorman_rfid.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,6 +67,15 @@
       <filePath value="$PROJECT_DIR$" />
       <method v="2" />
     </configuration>
+    <configuration name="go build github.com/fuks-kit/doorman/cmd/doorman" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="doorman" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <package value="github.com/fuks-kit/doorman/cmd/doorman" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$/cmd/doorman/doorman.go" />
+      <method v="2" />
+    </configuration>
     <configuration default="true" type="GoTestRunConfiguration" factoryName="Go Test">
       <module name="doorman" />
       <working_directory value="$PROJECT_DIR$" />
@@ -75,6 +86,11 @@
       <framework value="gotest" />
       <method v="2" />
     </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Go Build.go build github.com/fuks-kit/doorman/cmd/doorman" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TypeScriptGeneratedFilesManager">
@@ -82,8 +98,10 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Restructure dirs" />
+    <MESSAGE value="Create config package" />
     <MESSAGE value="IDE stuff" />
-    <option name="LAST_COMMIT_MESSAGE" value="IDE stuff" />
+    <MESSAGE value="Remove log" />
+    <option name="LAST_COMMIT_MESSAGE" value="Remove log" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
