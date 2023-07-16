@@ -6,13 +6,25 @@ import (
 	"strings"
 )
 
+const (
+	sheetId   = "1eNZxLDzBPZDZ5JKI47ZoUlw8pB6C--7MQiRBxspO4EI"
+	appSheet  = "fuks APP (BETA)"
+	cardSheet = "KIT-Cards"
+)
+
+type SheetAppUser struct {
+	Name         string
+	UserId       string
+	Organization string
+}
+
 // GetAuthorisedSheetUsers fetches and pares a Google Sheet with names and KIT-Card numbers.
 func GetAuthorisedSheetUsers(sheetId string) (users []AuthorisedUser, _ error) {
 	if sheetId == "" {
 		return nil, fmt.Errorf("SpreadsheetId='%s'", sheetId)
 	}
 
-	readRange := "A2:C"
+	readRange := cardSheet + "!A2:C"
 
 	resp, err := sheetsService.
 		Spreadsheets.
@@ -64,6 +76,52 @@ func GetAuthorisedSheetUsers(sheetId string) (users []AuthorisedUser, _ error) {
 		authUser := AuthorisedUser{
 			Name:         name,
 			ChipNumber:   chipNumber,
+			Organization: org,
+		}
+
+		users = append(users, authUser)
+	}
+
+	return
+}
+
+func GetSheetAppUser() (users []SheetAppUser, _ error) {
+	readRange := appSheet + "!A2:C"
+
+	resp, err := sheetsService.
+		Spreadsheets.
+		Values.
+		Get(sheetId, readRange).
+		Do()
+	if err != nil {
+		return nil, fmt.Errorf("unable to retrieve data from sheet: spreadsheetId=%s error=%v",
+			sheetId, err)
+	}
+
+	for _, val := range resp.Values {
+		if len(val) != 3 {
+			continue
+		}
+
+		name, nameOk := val[0].(string)
+		userId, userOk := val[1].(string)
+		org, orkOk := val[2].(string)
+
+		if !nameOk || !userOk || !orkOk {
+			continue
+		}
+
+		name = strings.TrimSpace(name)
+		userId = strings.TrimSpace(userId)
+		org = strings.TrimSpace(org)
+
+		if name == "" || userId == "" || org == "" {
+			continue
+		}
+
+		authUser := SheetAppUser{
+			Name:         name,
+			UserId:       userId,
 			Organization: org,
 		}
 
