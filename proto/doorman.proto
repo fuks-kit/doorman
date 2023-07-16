@@ -1,7 +1,6 @@
 syntax = "proto3";
 
 import "google/protobuf/empty.proto";
-import "google/protobuf/timestamp.proto";
 import "google/protobuf/duration.proto";
 
 option go_package = "./proto";
@@ -21,6 +20,5 @@ message OfficePermission {
 
 message DoorState {
   bool open = 1;
-  google.protobuf.Timestamp last_opened = 2;
-  google.protobuf.Duration open_duration = 3;
+  google.protobuf.Duration open_duration = 2;
 }
