@@ -14,8 +14,8 @@ func isGroupMember(group, email string) (isMember bool, _ error) {
 	return member.IsMember, nil
 }
 
-// checkFuksAccess checks if the given email has permission to access the office.
-func checkFuksAccess(email string) (access bool, _ error) {
+// checkFuksPermission checks if the given email has permission to access the office.
+func checkFuksPermission(email string) (access bool, _ error) {
 	user, err := adminService.Users.Get(email).Do()
 	if err != nil {
 		return false, err
@@ -40,14 +40,14 @@ func checkFuksAccess(email string) (access bool, _ error) {
 	return member, nil
 }
 
-func checkExternalAccess(uid, email string) (access bool, _ error) {
+func checkVisitorPermission(uid, email string) (access bool, _ error) {
 	return false, nil
 }
 
 func HasOfficeAccess(uid, email string) (access bool, _ error) {
 	if strings.HasSuffix(email, "@fuks.org") {
-		return checkFuksAccess(email)
+		return checkFuksPermission(email)
 	} else {
-		return checkExternalAccess(uid, email)
+		return checkVisitorPermission(uid, email)
 	}
 }
