@@ -1,45 +1,17 @@
 package main
 
 import (
-	"encoding/json"
 	"flag"
 	"github.com/fuks-kit/doorman/chipcard/access"
 	"github.com/fuks-kit/doorman/chipcard/rfid"
+	"github.com/fuks-kit/doorman/config"
 	"github.com/fuks-kit/doorman/door"
 	"log"
-	"os"
 	"time"
 )
 
-type Config struct {
-	// Input path of the RFID reader
-	InputDevice string `json:"input-device"`
-	// Update interval for the chip-number database
-	UpdateInterval string `json:"update-interval"`
-	// Open door duration
-	OpenDoor string `json:"open-door"`
-}
-
-func (config Config) GetUpdateInterval() time.Duration {
-	duration, err := time.ParseDuration(config.UpdateInterval)
-	if err != nil {
-		log.Fatalf("Couldn't parse update-interval: %v", err)
-	}
-
-	return duration
-}
-
-func (config Config) GetOpenDoorDuration() time.Duration {
-	duration, err := time.ParseDuration(config.OpenDoor)
-	if err != nil {
-		log.Fatalf("Couldn't parse open-door: %v", err)
-	}
-
-	return duration
-}
-
 var (
-	config       Config
+	conf         *config.Config
 	configPath   = flag.String("c", "config.json", "Config JSON path")
 	fallbackPath = flag.String("f", "fallback-access.json", "Default access JSON path")
 )
@@ -54,20 +26,17 @@ func init() {
 	log.Printf("Doorman initialising...")
 
 	log.Printf("Source config file...")
-	byt, err := os.ReadFile(*configPath)
+
+	var err error
+	conf, err = config.ReadConfig(*configPath)
 	if err != nil {
 		log.Fatalf("Cloudn't read config file %s: %v", *configPath, err)
-	}
-
-	err = json.Unmarshal(byt, &config)
-	if err != nil {
-		log.Fatalf("Cloudn't parse config file %s: %v", *configPath, err)
 	}
 }
 
 func main() {
 	validator := access.NewValidator(access.Config{
-		UpdateInterval: config.GetUpdateInterval(),
+		UpdateInterval: conf.GetUpdateInterval(),
 		FallbackPath:   *fallbackPath,
 		RecoveryPath:   "doorman-recovery.json",
 	})
@@ -82,8 +51,8 @@ func main() {
 		}()
 	}
 
-	openDoorDuration := config.GetOpenDoorDuration()
-	device := rfid.Reader(config.InputDevice)
+	openDoorDuration := conf.GetOpenDoorDuration()
+	device := rfid.Reader(conf.InputDevice)
 
 	log.Printf("Doorman ready")
 
