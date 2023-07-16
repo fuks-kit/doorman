@@ -52,7 +52,22 @@ func checkFuksPermission(email string) (access *OfficePermission, _ error) {
 	}, nil
 }
 
-func checkVisitorPermission(uid, email string) (access *OfficePermission, _ error) {
+func checkVisitorPermission(uid string) (access *OfficePermission, _ error) {
+	users, err := GetAuthUserFromSheet()
+	if err != nil {
+		return nil, err
+	}
+
+	for _, user := range users {
+		if user.UserId == uid {
+			return &OfficePermission{
+				HasAccess:    true,
+				IsFuksMember: false,
+				IsActiveFuks: false,
+			}, nil
+		}
+	}
+
 	return &OfficePermission{}, nil
 }
 
@@ -60,6 +75,6 @@ func HasOfficeAccess(uid, email string) (access *OfficePermission, _ error) {
 	if strings.HasSuffix(email, "@fuks.org") {
 		return checkFuksPermission(email)
 	} else {
-		return checkVisitorPermission(uid, email)
+		return checkVisitorPermission(uid)
 	}
 }

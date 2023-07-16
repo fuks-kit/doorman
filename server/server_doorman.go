@@ -42,7 +42,7 @@ func (server *DoormanServer) OpenDoor(ctx context.Context, _ *emptypb.Empty) (*p
 	}
 
 	if !permission.HasAccess {
-		return nil, fmt.Errorf("access denied")
+		return nil, fmt.Errorf("permission denied")
 	}
 
 	accessDuration := time.Second * 5

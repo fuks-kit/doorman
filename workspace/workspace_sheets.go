@@ -85,7 +85,7 @@ func GetAuthorisedSheetUsers(sheetId string) (users []AuthorisedUser, _ error) {
 	return
 }
 
-func GetSheetAppUser() (users []SheetAppUser, _ error) {
+func GetAuthUserFromSheet() (users []SheetAppUser, _ error) {
 	readRange := appSheet + "!A2:C"
 
 	resp, err := sheetsService.
