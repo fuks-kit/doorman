@@ -17,6 +17,8 @@ func NewDoormanServer() *DoormanServer {
 }
 
 func (server *DoormanServer) CheckAccount(ctx context.Context, _ *emptypb.Empty) (*pb.AccountState, error) {
+	log.Printf("CheckAccount:")
+
 	token, err := verifyCredentials(ctx)
 	if err != nil {
 		return nil, err
@@ -40,6 +42,6 @@ func (server *DoormanServer) CheckAccount(ctx context.Context, _ *emptypb.Empty)
 }
 
 func (server *DoormanServer) OpenDoor(ctx context.Context, _ *emptypb.Empty) (*pb.DoorState, error) {
-	log.Printf("OpenDoor")
+	log.Printf("OpenDoor:")
 	return &pb.DoorState{}, nil
 }
