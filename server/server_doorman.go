@@ -3,7 +3,7 @@ package server
 import (
 	"context"
 	pb "github.com/fuks-kit/doorman/proto"
-	fuks "github.com/fuks-kit/doorman/workspace"
+	"github.com/fuks-kit/doorman/workspace"
 	"google.golang.org/protobuf/types/known/emptypb"
 	"log"
 )
@@ -27,7 +27,7 @@ func (server *DoormanServer) CheckAccount(ctx context.Context, _ *emptypb.Empty)
 		return nil, err
 	}
 
-	access, err := fuks.HasOfficeAccess(token.UID, user.Email)
+	access, err := workspace.HasOfficeAccess(token.UID, user.Email)
 	if err != nil {
 		return nil, err
 	}
