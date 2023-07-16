@@ -21,7 +21,10 @@ func main() {
 
 	log.Printf("start reading and parsing input from %s", *devicePath)
 
-	device := rfid.Reader(*devicePath)
+	device, err := rfid.NewReader(*devicePath)
+	if err != nil {
+		log.Fatalf("failed to open device %s", *devicePath)
+	}
 
 	if *dump {
 		log.Printf("dump all inputs")

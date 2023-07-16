@@ -32,16 +32,16 @@ type Device struct {
 	Input *os.File
 }
 
-func Reader(dev string) Device {
+func NewReader(dev string) (*Device, error) {
 	log.Printf("Staring new RFID reader on %s", dev)
 	inputDevice, err := os.Open(dev)
 	if err != nil {
-		log.Fatalln(err)
+		return nil, err
 	}
 
-	return Device{
+	return &Device{
 		Input: inputDevice,
-	}
+	}, nil
 }
 
 func (device Device) Close() (_ error) {

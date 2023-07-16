@@ -2,12 +2,14 @@ package main
 
 import (
 	"flag"
-	"github.com/fuks-kit/doorman/chipcard/access"
-	"github.com/fuks-kit/doorman/chipcard/rfid"
+	"github.com/fuks-kit/doorman/chipcard"
 	"github.com/fuks-kit/doorman/config"
-	"github.com/fuks-kit/doorman/door"
+	pb "github.com/fuks-kit/doorman/proto"
+	"github.com/fuks-kit/doorman/server"
+	"google.golang.org/grpc"
 	"log"
-	"time"
+	"net"
+	"sync"
 )
 
 var (
@@ -15,8 +17,6 @@ var (
 	configPath   = flag.String("c", "config.json", "Config JSON path")
 	fallbackPath = flag.String("f", "fallback-access.json", "Default access JSON path")
 )
-
-const retryDuration = time.Second * 120
 
 func init() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
@@ -35,34 +35,31 @@ func init() {
 }
 
 func main() {
-	validator := access.NewValidator(access.Config{
-		UpdateInterval: conf.GetUpdateInterval(),
-		FallbackPath:   *fallbackPath,
-		RecoveryPath:   "doorman-recovery.json",
-	})
+	var wg sync.WaitGroup
+	wg.Add(2)
 
-	// This update may fail because the Wi-Fi is not ready after an immediate start at system boot.
-	fail := validator.Update()
-	if fail {
-		log.Printf("Update failed: retry in %v", retryDuration)
-		go func() {
-			time.Sleep(retryDuration)
-			validator.Update()
-		}()
-	}
+	go func() {
+		doormanServer := server.NewDoormanServer()
+		grpcServer := grpc.NewServer()
+		pb.RegisterDoormanServer(grpcServer, doormanServer)
 
-	openDoorDuration := conf.GetOpenDoorDuration()
-	device := rfid.Reader(conf.InputDevice)
-
-	log.Printf("Doorman ready")
-
-	for id := range device.ReadIdentifiers() {
-		log.Printf("Access event: RFID=0x%08x", id)
-
-		if user, ok := validator.CheckAccess(id); ok {
-			log.Printf("Open door: name='%s' org='%s' rfid=0x%08x",
-				user.Name, user.Organization, id)
-			door.Open(openDoorDuration)
+		lis, err := net.Listen("tcp", ":50051")
+		if err != nil {
+			log.Fatalf("failed to listen: %v", err)
 		}
-	}
+
+		log.Println("starting server on port", lis.Addr().String())
+		if err = grpcServer.Serve(lis); err != nil {
+			log.Fatalf("failed to serve: %v", err)
+		}
+
+		wg.Done()
+	}()
+
+	go func() {
+		chipcard.Run(*conf, *fallbackPath)
+		wg.Done()
+	}()
+
+	wg.Wait()
 }
