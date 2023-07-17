@@ -4,10 +4,8 @@ import (
 	"context"
 	"firebase.google.com/go/v4/auth"
 	"fmt"
-	"github.com/fuks-kit/doorman/simple"
 	"github.com/fuks-kit/doorman/workspace"
 	"google.golang.org/grpc/metadata"
-	"log"
 	"strings"
 )
 
@@ -35,22 +33,12 @@ func verifyToken(ctx context.Context) (token *auth.Token, err error) {
 	return authClient.VerifyIDToken(ctx, bearer)
 }
 
-func verifyUser(ctx context.Context) (user *auth.UserRecord, err error) {
+func verifyPermission(ctx context.Context) (permission *workspace.OfficePermission, _ error) {
 	token, err := verifyToken(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	log.Printf("token.Claims: %s", simple.PrettifyAny(token.Claims))
-
-	return authClient.GetUser(ctx, token.UID)
-}
-
-func verifyPermission(ctx context.Context) (permission *workspace.OfficePermission, _ error) {
-	user, err := verifyUser(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	return workspace.HasOfficeAccess(user.UID, user.Email)
+	email := token.Claims["email"].(string)
+	return workspace.HasOfficeAccess(token.UID, email)
 }
