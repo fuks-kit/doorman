@@ -39,6 +39,12 @@ func verifyPermission(ctx context.Context) (permission *workspace.OfficePermissi
 		return nil, err
 	}
 
-	email := token.Claims["email"].(string)
+	var email string
+	if token.Claims != nil {
+		if mail, ok := token.Claims["email"].(string); ok {
+			email = mail
+		}
+	}
+
 	return workspace.HasOfficeAccess(token.UID, email)
 }
