@@ -1,7 +1,6 @@
 package workspace
 
 import (
-	"log"
 	"strings"
 )
 
@@ -27,8 +26,6 @@ func checkFuksPermission(email string) (access *OfficePermission, _ error) {
 	if err != nil {
 		return nil, err
 	}
-
-	log.Printf("checkFuksPermission: %s is active fuks member: %t", email, member)
 
 	return &OfficePermission{
 		HasAccess:    member,
