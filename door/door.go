@@ -15,12 +15,12 @@ func Open(duration time.Duration) error {
 	}
 
 	lock.Lock()
-	defer lock.Unlock()
 
 	pin := rpio.Pin(26)
 
 	// Open and map memory to access gpio, check for errors
 	if err := rpio.Open(); err != nil {
+		lock.Unlock()
 		return err
 	}
 
@@ -28,6 +28,8 @@ func Open(duration time.Duration) error {
 	pin.Output()
 
 	go func() {
+		defer lock.Unlock()
+
 		// Unmap gpio memory when done
 		defer func() {
 			_ = rpio.Close()
@@ -36,7 +38,6 @@ func Open(duration time.Duration) error {
 		pin.High()
 		time.Sleep(duration)
 		pin.Low()
-
 	}()
 
 	return nil
