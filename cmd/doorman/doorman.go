@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"github.com/fuks-kit/doorman/certificate"
 	"github.com/fuks-kit/doorman/chipcard"
 	"github.com/fuks-kit/doorman/config"
 	pb "github.com/fuks-kit/doorman/proto"
@@ -16,7 +17,13 @@ var (
 	conf         *config.Config
 	configPath   = flag.String("c", "config.json", "Config JSON path")
 	fallbackPath = flag.String("f", "fallback-access.json", "Default access JSON path")
+	useTLS       = flag.Bool("tls", false, "Connection uses TLS if true, else plain TCP")
 )
+
+func init() {
+	log.SetFlags(log.LstdFlags | log.Lshortfile)
+	flag.Parse()
+}
 
 func init() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
@@ -39,8 +46,14 @@ func main() {
 	wg.Add(2)
 
 	go func() {
+		var opt []grpc.ServerOption
+		if *useTLS {
+			tlsCredentials := certificate.TLSCredentials()
+			opt = append(opt, grpc.Creds(tlsCredentials))
+		}
+
 		doormanServer := server.NewDoormanServer()
-		grpcServer := grpc.NewServer()
+		grpcServer := grpc.NewServer(opt...)
 		pb.RegisterDoormanServer(grpcServer, doormanServer)
 
 		lis, err := net.Listen("tcp", ":50051")

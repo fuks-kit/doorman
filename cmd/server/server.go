@@ -1,6 +1,8 @@
 package main
 
 import (
+	"flag"
+	"github.com/fuks-kit/doorman/certificate"
 	pb "github.com/fuks-kit/doorman/proto"
 	"github.com/fuks-kit/doorman/server"
 	"google.golang.org/grpc"
@@ -8,13 +10,25 @@ import (
 	"net"
 )
 
+var (
+	useTLS = flag.Bool("tls", false, "Connection uses TLS if true, else plain TCP")
+)
+
 func init() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
+	flag.Parse()
 }
 
 func main() {
+
+	var opt []grpc.ServerOption
+	if *useTLS {
+		tlsCredentials := certificate.TLSCredentials()
+		opt = append(opt, grpc.Creds(tlsCredentials))
+	}
+
 	doormanServer := server.NewDoormanServer()
-	grpcServer := grpc.NewServer()
+	grpcServer := grpc.NewServer(opt...)
 	pb.RegisterDoormanServer(grpcServer, doormanServer)
 
 	lis, err := net.Listen("tcp", ":50051")
