@@ -4,8 +4,10 @@ import (
 	"context"
 	"firebase.google.com/go/v4/auth"
 	"fmt"
+	"github.com/fuks-kit/doorman/simple"
 	"github.com/fuks-kit/doorman/workspace"
 	"google.golang.org/grpc/metadata"
+	"log"
 	"strings"
 )
 
@@ -38,6 +40,8 @@ func verifyUser(ctx context.Context) (user *auth.UserRecord, err error) {
 	if err != nil {
 		return nil, err
 	}
+
+	log.Printf("token.Claims: %s", simple.PrettifyAny(token.Claims))
 
 	return authClient.GetUser(ctx, token.UID)
 }
