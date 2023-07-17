@@ -7,10 +7,10 @@ import (
 	"log"
 )
 
-//go:embed cert.pem
+//go:embed doorman-cert.pem
 var Cert []byte
 
-//go:embed key.pem
+//go:embed doorman-key.pem
 var Key []byte
 
 func TLSCredentials() credentials.TransportCredentials {
