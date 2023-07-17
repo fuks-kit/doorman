@@ -1,6 +1,7 @@
 package workspace
 
 import (
+	"log"
 	"strings"
 )
 
@@ -22,53 +23,31 @@ func isGroupMember(group, email string) (isMember bool, _ error) {
 
 // checkFuksPermission checks if the given email has permission to access the office.
 func checkFuksPermission(email string) (access *OfficePermission, _ error) {
-	user, err := adminService.Users.Get(email).Do()
-	if err != nil {
-		return nil, err
-	}
-
-	// TODO: Uncomment this
-	// if user.IsAdmin {
-	// 	 return true, nil
-	// }
-
-	if user.OrgUnitPath == "/aktive" {
-		return &OfficePermission{
-			HasAccess:    true,
-			IsFuksMember: true,
-			IsActiveFuks: true,
-		}, nil
-	}
-
 	member, err := isGroupMember("aktive@fuks.org", email)
 	if err != nil {
 		return nil, err
 	}
 
+	log.Printf("checkFuksPermission: %s is active fuks member: %t", email, member)
+
 	return &OfficePermission{
-		HasAccess:    true,
+		HasAccess:    member,
 		IsFuksMember: true,
 		IsActiveFuks: member,
 	}, nil
 }
 
-func checkVisitorPermission(uid string) (access *OfficePermission, _ error) {
-	users, err := GetAuthUserFromSheet()
+func checkVisitorPermission(uid string) (permission *OfficePermission, _ error) {
+	access, err := GetAuthUserFromSheetCache(uid)
 	if err != nil {
 		return nil, err
 	}
 
-	for _, user := range users {
-		if user.UserId == uid {
-			return &OfficePermission{
-				HasAccess:    true,
-				IsFuksMember: false,
-				IsActiveFuks: false,
-			}, nil
-		}
-	}
-
-	return &OfficePermission{}, nil
+	return &OfficePermission{
+		HasAccess:    access,
+		IsFuksMember: false,
+		IsActiveFuks: false,
+	}, nil
 }
 
 func HasOfficeAccess(uid, email string) (access *OfficePermission, _ error) {
