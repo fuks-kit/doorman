@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 	"fmt"
+	"github.com/fuks-kit/doorman/door"
 	pb "github.com/fuks-kit/doorman/proto"
 	"google.golang.org/protobuf/types/known/durationpb"
 	"google.golang.org/protobuf/types/known/emptypb"
@@ -48,8 +49,11 @@ func (server *DoormanServer) OpenDoor(ctx context.Context, _ *emptypb.Empty) (*p
 	}
 
 	accessDuration := time.Second * 5
-	// TODO: uncomment when door is connected
-	// go door.Open(accessDuration)
+
+	err = door.Open(accessDuration)
+	if err != nil {
+		return nil, err
+	}
 
 	return &pb.DoorState{
 		Open:         true,

@@ -43,7 +43,10 @@ func Run(conf config.Config, fallbackPath string) {
 		if user, ok := validator.CheckAccess(id); ok {
 			log.Printf("Open door: name='%s' org='%s' rfid=0x%08x",
 				user.Name, user.Organization, id)
-			door.Open(openDoorDuration)
+			err = door.Open(openDoorDuration)
+			if err != nil {
+				log.Printf("failed to open door: %v", err)
+			}
 		}
 	}
 }
