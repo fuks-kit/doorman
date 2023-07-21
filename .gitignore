@@ -19,6 +19,7 @@ token.json
 
 # Don't checkin service account credentials!
 credentials.json
+firebase-credentials.json
 
 dump/
 dump.*
@@ -31,3 +32,5 @@ cmd/debug/debug.go
 go.sum
 
 doorman-recovery.json
+.idea/workspace.xml
+.DS_Store

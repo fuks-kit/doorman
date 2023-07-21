@@ -2,22 +2,22 @@ package access
 
 import (
 	"encoding/json"
-	"github.com/fuks-kit/doorman/fuks"
-	"io/ioutil"
+	"github.com/fuks-kit/doorman/workspace"
 	"log"
+	"os"
 )
 
 func (validator *Validator) readFallbackFrom(fallbackPath string) {
 
 	log.Printf("Read fallback access file (%s)", fallbackPath)
 
-	byt, err := ioutil.ReadFile(fallbackPath)
+	byt, err := os.ReadFile(fallbackPath)
 	if err != nil {
 		log.Printf("Couldn't read access JSON: %v", err)
 		return
 	}
 
-	var users []fuks.AuthorisedUser
+	var users []workspace.AuthorisedUser
 	err = json.Unmarshal(byt, &users)
 	if err != nil {
 		log.Printf("Couldn't unmarshal fallback JSON: %v", err)

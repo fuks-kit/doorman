@@ -2,8 +2,8 @@ package access
 
 import (
 	"encoding/json"
-	"io/ioutil"
 	"log"
+	"os"
 )
 
 func (validator *Validator) readRecoveryFrom(recoveryFile string) {
@@ -12,7 +12,7 @@ func (validator *Validator) readRecoveryFrom(recoveryFile string) {
 	validator.mu.Lock()
 	defer validator.mu.Unlock()
 
-	byt, err := ioutil.ReadFile(recoveryFile)
+	byt, err := os.ReadFile(recoveryFile)
 	if err != nil {
 		log.Printf("Couldn't read %s: %v", recoveryFile, err)
 		return
@@ -40,7 +40,7 @@ func (validator *Validator) writeRecovery(recoveryFile string) {
 		log.Fatalf("Couldn't write: %v", err)
 	}
 
-	err = ioutil.WriteFile(recoveryFile, byt, 0644)
+	err = os.WriteFile(recoveryFile, byt, 0644)
 	if err != nil {
 		log.Printf("Couldn't write %s: %v", recoveryFile, err)
 	}

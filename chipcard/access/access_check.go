@@ -1,10 +1,10 @@
 package access
 
 import (
-	"github.com/fuks-kit/doorman/fuks"
+	"github.com/fuks-kit/doorman/workspace"
 )
 
-func (validator *Validator) CheckAccess(rfid uint32) (user fuks.AuthorisedUser, access bool) {
+func (validator *Validator) CheckAccess(rfid uint32) (user workspace.AuthorisedUser, access bool) {
 	validator.mu.RLock()
 	defer validator.mu.RUnlock()
 
@@ -20,5 +20,5 @@ func (validator *Validator) CheckAccess(rfid uint32) (user fuks.AuthorisedUser, 
 		return user, access
 	}
 
-	return fuks.AuthorisedUser{}, false
+	return workspace.AuthorisedUser{}, false
 }

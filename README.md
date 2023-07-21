@@ -46,7 +46,7 @@ go install cmd/door/door.go
 
 > Note: Add ```export PATH=$PATH:$HOME/go/bin/``` to ```.bashrc```
 
-## Create doorman service
+### Create doorman service
 
 ```shell
 sudo mkdir -p /etc/doorman/
@@ -60,7 +60,7 @@ sudo service doorman start
 
 Run ```sudo systemctl enable doorman``` to start the doorman service on startup
 
-## Troubleshooting
+### Troubleshooting
 
 ```shell
 # View logs
@@ -75,11 +75,34 @@ sudo rm /var/log/doorman.log
 sudo rm ~/doorman-recovery.json
 ```
 
-## Cross compile executables
+### Cross compile executables
 
 ```shell
 rm -rf bin
 mkdir -p bin
 GOOS=linux GOARCH=arm go build -o bin/doorman cmd/doorman/doorman.go
 scp bin/doorman fuks@10.0.0.238:~/go/bin
+```
+
+## fuks App integration
+
+The doorman system provides a [gRPC](https://grpc.io/) API to allow the fuks App to open the door.
+
+The API is defined in ```proto/doorman.proto```.
+
+#### Dependencies
+
+```shell
+# Install protobuf compiler
+brew install protobuf
+go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+```
+
+#### Generate gRPC code
+
+```shell
+protoc --go_out=. --go_opt=paths=source_relative \
+    --go-grpc_out=. --go-grpc_opt=paths=source_relative \
+    proto/doorman.proto
 ```

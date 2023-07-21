@@ -17,5 +17,8 @@ func init() {
 }
 
 func main() {
-	door.Open(*duration)
+	err := door.Open(*duration)
+	if err != nil {
+		log.Fatal(err)
+	}
 }

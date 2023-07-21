@@ -2,37 +2,43 @@ package door
 
 import (
 	"github.com/stianeikeland/go-rpio"
-	"log"
 	"sync"
 	"time"
 )
 
 var lock sync.Mutex
 
-func Open(duration time.Duration) {
+// Open opens the office door for the given duration.
+func Open(duration time.Duration) error {
 	if duration <= 0 {
-		return
+		return nil
 	}
 
 	lock.Lock()
-	defer lock.Unlock()
 
 	pin := rpio.Pin(26)
 
 	// Open and map memory to access gpio, check for errors
 	if err := rpio.Open(); err != nil {
-		log.Fatalln(err)
+		lock.Unlock()
+		return err
 	}
-
-	// Unmap gpio memory when done
-	defer func() {
-		_ = rpio.Close()
-	}()
 
 	// Set pin to output mode
 	pin.Output()
 
-	pin.High()
-	time.Sleep(duration)
-	pin.Low()
+	go func() {
+		defer lock.Unlock()
+
+		// Unmap gpio memory when done
+		defer func() {
+			_ = rpio.Close()
+		}()
+
+		pin.High()
+		time.Sleep(duration)
+		pin.Low()
+	}()
+
+	return nil
 }

@@ -1,4 +1,4 @@
-package fuks
+package workspace
 
 type AuthorisedUser struct {
 	Email        string `json:"email,omitempty"`
