@@ -26,12 +26,12 @@ func NewValidator(config Config) (validator *Validator) {
 	// because otherwise updates are not persisted properly!
 	validator = &Validator{}
 
-	if config.FallbackPath != "" {
-		validator.readFallbackFrom(config.FallbackPath)
-	}
-
 	if config.RecoveryPath != "" {
 		validator.readRecoveryFrom(config.RecoveryPath)
+	}
+
+	if config.FallbackPath != "" {
+		validator.readFallbackFrom(config.FallbackPath)
 	}
 
 	if config.UpdateInterval > 0 {
