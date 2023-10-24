@@ -49,6 +49,8 @@ Prepare a new release by following these steps:
 
 ```shell
 git pull
+git checkout vX.X.X
+
 go get all
 
 go install cmd/doorman/doorman.go
