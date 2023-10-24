@@ -33,6 +33,18 @@ The generated JSON must be placed under ```fuks/credentials.json``` and will be 
 
 > Note that you might need to update the email address field **config.Subject** in ```fuks/fuks.go```
 
+## Create a new release
+
+Prepare a new release by following these steps:
+
+1. Update the changelog in `CHANGELOG.md`
+2. Update dependencies `go get -u all`
+3. Commit changes `git commit -am "Release vX.X.X"`
+4. Push changes `git push`
+5. Create a new git tag:
+    1. `git tag -a vX.X.X -m "Release vX.X.X"`
+    2. `git push origin vX.X.X`
+
 ## Compile and install Doorman CLI
 
 ```shell
