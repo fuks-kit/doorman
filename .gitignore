@@ -34,3 +34,5 @@ go.sum
 doorman-recovery.json
 .idea/workspace.xml
 .DS_Store
+
+.idea/
