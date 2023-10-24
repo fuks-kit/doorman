@@ -84,25 +84,45 @@ GOOS=linux GOARCH=arm go build -o bin/doorman cmd/doorman/doorman.go
 scp bin/doorman fuks@10.0.0.238:~/go/bin
 ```
 
-## fuks App integration
+## Generate gRPC Definitions
 
-The doorman system provides a [gRPC](https://grpc.io/) API to allow the fuks App to open the door.
+### Dependencies
 
-The API is defined in ```proto/doorman.proto```.
+Before you begin, make sure you have the following dependencies installed:
 
-#### Dependencies
+- Protocol Buffers: Install with Homebrew (macOS) or your preferred package manager.
+   ```bash
+   brew install protobuf
+   ```
 
-```shell
-# Install protobuf compiler
-brew install protobuf
-go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
-go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
-```
+- Go Protobuf and gRPC code generation tools:
+   ```bash
+   go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+   go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+   ```
 
-#### Generate gRPC code
+### Generate Code
 
-```shell
-protoc --go_out=. --go_opt=paths=source_relative \
-    --go-grpc_out=. --go-grpc_opt=paths=source_relative \
-    proto/doorman.proto
-```
+To generate gRPC definitions, follow these steps:
+
+1. Update APP_DIR Variable
+    - In the `proto/Makefile`, update the `APP_DIR` variable to point to the Fuks App directory.
+
+2. Update PROTO_ROOT_DIR Variable
+    - If necessary, modify the `PROTO_ROOT_DIR` variable in the `proto/Makefile` to suit your setup.
+
+3. Update gRPC Definitions
+    - Make changes to the gRPC definitions in `proto/doorman.proto` as needed.
+
+4. Generate Code
+    - Use the following commands to generate the code:
+        - Generate Go code:
+          ```bash
+          make go
+          ```
+        - Generate Fuks App code:
+          ```bash
+          make dart
+          ```
+
+These guidelines should help you make the most out of the Fuks Cloud Services repository. Enjoy your journey!
