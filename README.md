@@ -138,5 +138,3 @@ To generate gRPC definitions, follow these steps:
           ```bash
           make dart
           ```
-
-These guidelines should help you make the most out of the Fuks Cloud Services repository. Enjoy your journey!
