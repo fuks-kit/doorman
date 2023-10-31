@@ -9,7 +9,7 @@ User=fuks
 Group=fuks
 
 WorkingDirectory=/home/fuks
-ExecStart=/home/fuks/go/bin/doorman -c /etc/doorman/config.json -f /etc/doorman/fallback-access.json
+ExecStart=/home/fuks/go/bin/doorman -tls true -c /etc/doorman/config.json -f /etc/doorman/fallback-access.json
 
 Restart=on-failure
 RestartSec=10
