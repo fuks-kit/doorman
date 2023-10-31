@@ -23,6 +23,7 @@ func main() {
 
 	var opt []grpc.ServerOption
 	if *useTLS {
+		log.Printf("Using TLS...")
 		tlsCredentials := certificate.TLSCredentials()
 		opt = append(opt, grpc.Creds(tlsCredentials))
 	}
