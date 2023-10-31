@@ -48,6 +48,8 @@ Prepare a new release by following these steps:
 ## Compile and install Doorman CLI
 
 ```shell
+git clone https://github.com/fuks-kit/doorman/
+
 git pull
 git checkout vX.X.X
 
