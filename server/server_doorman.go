@@ -25,6 +25,7 @@ func (server *DoormanServer) CheckPermissions(ctx context.Context, _ *emptypb.Em
 	start := time.Now()
 	permission, err := verifyPermission(ctx)
 	if err != nil {
+		log.Printf("Error: %v", err)
 		return nil, err
 	}
 	log.Printf("CheckPermissions: took %s", time.Since(start))
@@ -41,6 +42,7 @@ func (server *DoormanServer) OpenDoor(ctx context.Context, _ *emptypb.Empty) (*p
 
 	permission, err := verifyPermission(ctx)
 	if err != nil {
+		log.Printf("Error: %v", err)
 		return nil, err
 	}
 
@@ -52,6 +54,7 @@ func (server *DoormanServer) OpenDoor(ctx context.Context, _ *emptypb.Empty) (*p
 
 	err = door.Open(accessDuration)
 	if err != nil {
+		log.Printf("Error: %v", err)
 		return nil, err
 	}
 
