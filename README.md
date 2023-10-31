@@ -11,7 +11,9 @@ If the number can be matched to a fuks user, the door will be opened by using a 
 
 ![Example](photo.jpg)
 
-## Create new credentials
+## Credentials and Certificates
+
+### Google Workspace
 
 The Doorman system needs access to Google Workspace APIs to fetch authorized RFID chip-numbers.
 To do this a **service account** with **domain-wide delegation** is required.
@@ -29,9 +31,21 @@ https://www.googleapis.com/auth/spreadsheets.readonly
 Follow the
 instructions [here](https://developers.google.com/workspace/guides/create-credentials#create_credentials_for_a_service_account)
 to create a new credentials.json.
-The generated JSON must be placed under ```fuks/credentials.json``` and will be included in the compiled GO executable.
+The generated JSON must be placed under `fuks/credentials.json` and will be included in the compiled GO executable.
 
-> Note that you might need to update the email address field **config.Subject** in ```fuks/fuks.go```
+> Note that you might need to update the email address field **config.Subject** in `fuks/fuks.go`
+
+### Firebase
+
+The Doorman system uses Firebase to authenticate users. To do this a **service account** is required. To create a new
+service account follow the instructions:
+
+1. Go to the [Firebase Console](https://console.firebase.google.com/)
+2. Select the project `fuks-app`
+3. Go to `Project Settings`
+4. Go to `Service accounts`
+5. Click on `Generate new private key`
+6. Place the downloaded JSON file under `server/firebase-credentials.json`
 
 ## Create a new release
 
