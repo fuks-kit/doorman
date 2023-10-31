@@ -13,6 +13,9 @@ If the number can be matched to a fuks user, the door will be opened by using a 
 
 ## Credentials and Certificates
 
+This section describes how to generate the required credentials and certificates for the Doorman system. All generated
+files can be found in the Google Drive folder `05_Team_IT/02_Interne Projekte/07_Doorman`.
+
 ### Google Workspace
 
 The Doorman system needs access to Google Workspace APIs to fetch authorized RFID chip-numbers.
@@ -46,6 +49,16 @@ service account follow the instructions:
 4. Go to `Service accounts`
 5. Click on `Generate new private key`
 6. Place the downloaded JSON file under `server/firebase-credentials.json`
+
+### TLS Certificates
+
+The Doorman system uses TLS certificates to secure the gRPC connection between the Doorman and the Fuks App.
+To generate new certificates follow the instructions:
+
+1. Update parameters in `certificate/Makefile`
+2. Run `make` in `certificate/`
+3. Update copy the contents of `certificate/doorman-cert.pem` to `fuks_app/lib/services/doorman_cert.dart`
+4. (Update common name in `fuks_app/lib/services/doorman.dart`)
 
 ## Create a new release
 
