@@ -103,21 +103,6 @@ sudo service doorman start
 
 Run ```sudo systemctl enable doorman``` to start the doorman service on startup
 
-### Troubleshooting
-
-```shell
-# View logs
-cat /var/log/doorman.log
-
-# Find Raspberry Pi
-sudo nmap -PE 10.0.0.0/24
-
-# Clean up debug procedure
-sudo service doorman stop
-sudo rm /var/log/doorman.log
-sudo rm ~/doorman-recovery.json
-```
-
 ### Cross compile executables
 
 ```shell
@@ -167,3 +152,31 @@ To generate gRPC definitions, follow these steps:
           ```bash
           make dart
           ```
+
+## Troubleshooting
+
+```shell
+# View logs
+cat /var/log/doorman.log
+
+# Find Raspberry Pi
+sudo nmap -PE 10.0.0.0/24
+
+# Clean up debug procedure
+sudo service doorman stop
+sudo rm /var/log/doorman.log
+sudo rm ~/doorman-recovery.json
+```
+
+### GPIO permission
+
+After running `` the error `Error: open /dev/gpiomem: permission denied` can be thrown. This can be fixed by:
+
+```shell
+# Add user to gpio group
+sudo adduser fuks gpio
+
+# Change permissions of /dev/gpiomem
+sudo chown root.gpio /dev/gpiomem
+sudo chmod g+rw /dev/gpiomem
+```
