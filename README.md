@@ -170,7 +170,7 @@ sudo rm ~/doorman-recovery.json
 
 ### GPIO permission
 
-After running `` the error `Error: open /dev/gpiomem: permission denied` can be thrown. This can be fixed by:
+After running `sudo rpi-update` the error `Error: open /dev/gpiomem: permission denied` can be thrown. This can be fixed by:
 
 ```shell
 # Add user to gpio group
