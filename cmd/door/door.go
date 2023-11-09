@@ -21,4 +21,6 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	time.Sleep(*duration)
 }
