@@ -22,13 +22,11 @@ func NewDoormanServer() *DoormanServer {
 func (server *DoormanServer) CheckPermissions(ctx context.Context, _ *emptypb.Empty) (*pb.OfficePermission, error) {
 	log.Printf("CheckPermissions:")
 
-	start := time.Now()
 	permission, err := verifyPermission(ctx)
 	if err != nil {
 		log.Printf("Error: %v", err)
 		return nil, err
 	}
-	log.Printf("CheckPermissions: took %s", time.Since(start))
 
 	return &pb.OfficePermission{
 		HasAccess:    permission.HasAccess,
