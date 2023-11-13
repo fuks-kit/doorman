@@ -3,10 +3,10 @@ package server
 import (
 	"context"
 	"fmt"
+	"github.com/fuks-kit/doorman/challenge"
 	"github.com/fuks-kit/doorman/door"
 	pb "github.com/fuks-kit/doorman/proto"
 	"google.golang.org/protobuf/types/known/durationpb"
-	"google.golang.org/protobuf/types/known/emptypb"
 	"log"
 	"time"
 )
@@ -19,8 +19,12 @@ func NewDoormanServer() *DoormanServer {
 	return &DoormanServer{}
 }
 
-func (server *DoormanServer) CheckPermissions(ctx context.Context, _ *emptypb.Empty) (*pb.OfficePermission, error) {
-	log.Printf("CheckPermissions:")
+func (server *DoormanServer) CheckPermissions(ctx context.Context, req *pb.Challenge) (*pb.OfficePermission, error) {
+	log.Printf("CheckPermissions: challenge=%v", req.Id)
+
+	if ok := challenge.Validate(req.Id); !ok {
+		return nil, fmt.Errorf("invalid challenge")
+	}
 
 	permission, err := verifyPermission(ctx)
 	if err != nil {
@@ -35,8 +39,12 @@ func (server *DoormanServer) CheckPermissions(ctx context.Context, _ *emptypb.Em
 	}, nil
 }
 
-func (server *DoormanServer) OpenDoor(ctx context.Context, _ *emptypb.Empty) (*pb.DoorState, error) {
-	log.Printf("OpenDoor:")
+func (server *DoormanServer) OpenDoor(ctx context.Context, req *pb.Challenge) (*pb.DoorState, error) {
+	log.Printf("OpenDoor: challenge=%v", req.Id)
+
+	if ok := challenge.Validate(req.Id); !ok {
+		return nil, fmt.Errorf("invalid challenge")
+	}
 
 	permission, err := verifyPermission(ctx)
 	if err != nil {
