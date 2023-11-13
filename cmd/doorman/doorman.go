@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"github.com/fuks-kit/doorman/certificate"
+	"github.com/fuks-kit/doorman/challenge"
 	"github.com/fuks-kit/doorman/chipcard"
 	"github.com/fuks-kit/doorman/config"
 	pb "github.com/fuks-kit/doorman/proto"
@@ -32,9 +33,13 @@ func init() {
 	log.Printf("----------------------------------------------")
 	log.Printf("Doorman initialising...")
 
-	log.Printf("Source config file...")
-
 	var err error
+	err = challenge.StartService()
+	if err != nil {
+		log.Fatalf("Cloudn't start challenge service: %v", err)
+	}
+
+	log.Printf("Source config file...")
 	conf, err = config.ReadConfig(*configPath)
 	if err != nil {
 		log.Fatalf("Cloudn't read config file %s: %v", *configPath, err)
