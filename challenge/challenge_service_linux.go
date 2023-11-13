@@ -53,4 +53,6 @@ func StartService() error {
 			}
 		}
 	}()
+
+	return nil
 }
