@@ -1,15 +1,18 @@
 syntax = "proto3";
 
-import "google/protobuf/empty.proto";
 import "google/protobuf/duration.proto";
 
 option go_package = "./proto";
 
-package endpoints.doorman;
+package endpoints.doorman.v2;
 
 service Doorman {
-  rpc CheckPermissions(google.protobuf.Empty) returns (OfficePermission);
-  rpc OpenDoor(google.protobuf.Empty) returns (DoorState);
+  rpc CheckPermissions(Challenge) returns (OfficePermission);
+  rpc OpenDoor(Challenge) returns (DoorState);
+}
+
+message Challenge {
+  string id = 1;
 }
 
 message OfficePermission {
