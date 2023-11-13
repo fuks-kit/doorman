@@ -1,6 +1,6 @@
 ## Shipping package
 ## Assumes user is on MacOS, if other OS, please change PROTO_ROOT_DIR to the path of protobuf installation
-PROTO_ROOT_DIR = $(shell brew --prefix)/Cellar/protobuf/24.4/include
+PROTO_ROOT_DIR = $(shell brew --prefix)/Cellar/protobuf/25/include
 APP_DIR = /Users/patrick/Code/fuks_app/
 APP_OUTPUT = $(APP_DIR)/lib/generated/doorman
 
