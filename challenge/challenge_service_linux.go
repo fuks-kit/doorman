@@ -31,14 +31,16 @@ func createChallenge() (uuid.UUID, error) {
 	return uuid.FromBytes(challenge)
 }
 
+// StartService starts the challenge BLE service
 func StartService() error {
 	err := adapter.Enable()
 	if err != nil {
 		return err
 	}
 
-	adv := adapter.DefaultAdvertisement()
+	advertisement := adapter.DefaultAdvertisement()
 
+	// Update the challenge every 30 seconds
 	go func() {
 		for {
 			challenge, err := createChallenge()
@@ -47,9 +49,11 @@ func StartService() error {
 			}
 
 			log.Printf("challenge: %s", challenge)
-			err = adv.Configure(bluetooth.AdvertisementOptions{
+
+			err = advertisement.Configure(bluetooth.AdvertisementOptions{
 				LocalName: "Doorman Nearby Challenge",
 				ServiceUUIDs: []bluetooth.UUID{
+					// Use the challenge as the service UUID, this is what the client will see
 					bluetooth.NewUUID(challenge),
 				},
 			})
@@ -57,16 +61,17 @@ func StartService() error {
 				log.Fatal(err)
 			}
 
+			// Update validation data
 			update(challenge.String())
 
-			err = adv.Start()
+			err = advertisement.Start()
 			if err != nil {
 				log.Fatal(err)
 			}
 
 			time.Sleep(refreshInterval)
 
-			err = adv.Stop()
+			err = advertisement.Stop()
 			if err != nil {
 				log.Fatal(err)
 			}
