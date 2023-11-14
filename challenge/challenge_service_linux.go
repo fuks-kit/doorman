@@ -1,14 +1,13 @@
 package challenge
 
 import (
-	"github.com/google/uuid"
 	"log"
 	"time"
 	"tinygo.org/x/bluetooth"
 )
 
-const (
-	challengePrefix = "4deb699e"
+var (
+	challengePrefix = []byte{0x4d, 0xeb, 0x69, 0x9e}
 	refreshInterval = time.Second * 30
 )
 
@@ -24,8 +23,13 @@ func StartService() error {
 
 	go func() {
 		for {
-			suffix := uuid.NewString()[8:]
-			challenge := uuid.MustParse(challengePrefix + suffix)
+			// Read bytes from cyrpto/rand
+			challenge := make([]byte, 16)
+			copy(challenge, challengePrefix)
+			n, err := rand.Read(challenge[4:])
+			if err != nil {
+				log.Fatal(err)
+			}
 
 			log.Printf("challenge: %s", challenge)
 			err = adv.Configure(bluetooth.AdvertisementOptions{
@@ -35,21 +39,21 @@ func StartService() error {
 				},
 			})
 			if err != nil {
-				return err
+				log.Fatal(err)
 			}
 
 			update(challenge.String())
 
 			err = adv.Start()
 			if err != nil {
-				return err
+				log.Fatal(err)
 			}
 
 			time.Sleep(refreshInterval)
 
 			err = adv.Stop()
 			if err != nil {
-				return err
+				log.Fatal(err)
 			}
 		}
 	}()
