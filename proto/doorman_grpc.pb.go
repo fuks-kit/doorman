@@ -28,7 +28,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type DoormanClient interface {
 	CheckAccess(ctx context.Context, in *AccessCheckRequest, opts ...grpc.CallOption) (*AccessCheckResponse, error)
-	OpenDoor(ctx context.Context, in *OpenDoorRequest, opts ...grpc.CallOption) (*OpenDoorResponse, error)
+	OpenDoor(ctx context.Context, in *DoorOpenRequest, opts ...grpc.CallOption) (*DoorOpenResponse, error)
 }
 
 type doormanClient struct {
@@ -48,8 +48,8 @@ func (c *doormanClient) CheckAccess(ctx context.Context, in *AccessCheckRequest,
 	return out, nil
 }
 
-func (c *doormanClient) OpenDoor(ctx context.Context, in *OpenDoorRequest, opts ...grpc.CallOption) (*OpenDoorResponse, error) {
-	out := new(OpenDoorResponse)
+func (c *doormanClient) OpenDoor(ctx context.Context, in *DoorOpenRequest, opts ...grpc.CallOption) (*DoorOpenResponse, error) {
+	out := new(DoorOpenResponse)
 	err := c.cc.Invoke(ctx, Doorman_OpenDoor_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -62,7 +62,7 @@ func (c *doormanClient) OpenDoor(ctx context.Context, in *OpenDoorRequest, opts 
 // for forward compatibility
 type DoormanServer interface {
 	CheckAccess(context.Context, *AccessCheckRequest) (*AccessCheckResponse, error)
-	OpenDoor(context.Context, *OpenDoorRequest) (*OpenDoorResponse, error)
+	OpenDoor(context.Context, *DoorOpenRequest) (*DoorOpenResponse, error)
 	mustEmbedUnimplementedDoormanServer()
 }
 
@@ -73,7 +73,7 @@ type UnimplementedDoormanServer struct {
 func (UnimplementedDoormanServer) CheckAccess(context.Context, *AccessCheckRequest) (*AccessCheckResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CheckAccess not implemented")
 }
-func (UnimplementedDoormanServer) OpenDoor(context.Context, *OpenDoorRequest) (*OpenDoorResponse, error) {
+func (UnimplementedDoormanServer) OpenDoor(context.Context, *DoorOpenRequest) (*DoorOpenResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method OpenDoor not implemented")
 }
 func (UnimplementedDoormanServer) mustEmbedUnimplementedDoormanServer() {}
@@ -108,7 +108,7 @@ func _Doorman_CheckAccess_Handler(srv interface{}, ctx context.Context, dec func
 }
 
 func _Doorman_OpenDoor_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(OpenDoorRequest)
+	in := new(DoorOpenRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -120,7 +120,7 @@ func _Doorman_OpenDoor_Handler(srv interface{}, ctx context.Context, dec func(in
 		FullMethod: Doorman_OpenDoor_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DoormanServer).OpenDoor(ctx, req.(*OpenDoorRequest))
+		return srv.(DoormanServer).OpenDoor(ctx, req.(*DoorOpenRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
