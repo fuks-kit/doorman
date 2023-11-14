@@ -1,6 +1,8 @@
 package challenge
 
 import (
+	"crypto/rand"
+	"github.com/google/uuid"
 	"log"
 	"time"
 	"tinygo.org/x/bluetooth"
@@ -13,6 +15,17 @@ var (
 
 var adapter = bluetooth.DefaultAdapter
 
+func createChallenge() (uuid, error) {
+	challenge := make([]byte, 16)
+	copy(challenge, challengePrefix)
+	_, err = rand.Read(challenge[4:])
+	if err != nil {
+		return uuid.Nil, err
+	}
+
+	return uuid.FromBytes(challenge)
+}
+
 func StartService() error {
 	err := adapter.Enable()
 	if err != nil {
@@ -23,10 +36,7 @@ func StartService() error {
 
 	go func() {
 		for {
-			// Read bytes from cyrpto/rand
-			challenge := make([]byte, 16)
-			copy(challenge, challengePrefix)
-			n, err := rand.Read(challenge[4:])
+			challenge, err := createChallenge()
 			if err != nil {
 				log.Fatal(err)
 			}
