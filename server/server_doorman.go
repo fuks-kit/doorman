@@ -19,10 +19,10 @@ func NewDoormanServer() *DoormanServer {
 	return &DoormanServer{}
 }
 
-func (server *DoormanServer) CheckPermissions(ctx context.Context, req *pb.Challenge) (*pb.OfficePermission, error) {
-	log.Printf("CheckPermissions: challenge=%v", req.Id)
+func (server *DoormanServer) CheckAccess(ctx context.Context, req *pb.AccessCheckRequest) (*pb.AccessCheckResponse, error) {
+	log.Printf("CheckAccess: challenge=%v", req.Challenge)
 
-	if ok := challenge.Validate(req.Id); !ok {
+	if ok := challenge.Validate(req.Challenge); !ok {
 		return nil, fmt.Errorf("invalid challenge")
 	}
 
@@ -32,17 +32,17 @@ func (server *DoormanServer) CheckPermissions(ctx context.Context, req *pb.Chall
 		return nil, err
 	}
 
-	return &pb.OfficePermission{
+	return &pb.AccessCheckResponse{
 		HasAccess:    permission.HasAccess,
-		IsFuksMember: permission.IsFuksMember,
+		IsFuks:       permission.IsFuksMember,
 		IsActiveFuks: permission.IsActiveFuks,
 	}, nil
 }
 
-func (server *DoormanServer) OpenDoor(ctx context.Context, req *pb.Challenge) (*pb.DoorState, error) {
-	log.Printf("OpenDoor: challenge=%v", req.Id)
+func (server *DoormanServer) OpenDoor(ctx context.Context, req *pb.DoorOpenRequest) (*pb.DoorOpenResponse, error) {
+	log.Printf("OpenDoor: challenge=%v", req.Challenge)
 
-	if ok := challenge.Validate(req.Id); !ok {
+	if ok := challenge.Validate(req.Challenge); !ok {
 		return nil, fmt.Errorf("invalid challenge")
 	}
 
@@ -64,7 +64,7 @@ func (server *DoormanServer) OpenDoor(ctx context.Context, req *pb.Challenge) (*
 		return nil, err
 	}
 
-	return &pb.DoorState{
+	return &pb.DoorOpenResponse{
 		Open:         true,
 		OpenDuration: durationpb.New(accessDuration),
 	}, nil
