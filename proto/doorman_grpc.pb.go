@@ -19,16 +19,16 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Doorman_CheckPermissions_FullMethodName = "/endpoints.doorman.v2.Doorman/CheckPermissions"
-	Doorman_OpenDoor_FullMethodName         = "/endpoints.doorman.v2.Doorman/OpenDoor"
+	Doorman_CheckAccess_FullMethodName = "/endpoints.doorman.v2.Doorman/CheckAccess"
+	Doorman_OpenDoor_FullMethodName    = "/endpoints.doorman.v2.Doorman/OpenDoor"
 )
 
 // DoormanClient is the client API for Doorman service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type DoormanClient interface {
-	CheckPermissions(ctx context.Context, in *Challenge, opts ...grpc.CallOption) (*OfficePermission, error)
-	OpenDoor(ctx context.Context, in *Challenge, opts ...grpc.CallOption) (*DoorState, error)
+	CheckAccess(ctx context.Context, in *AccessCheckRequest, opts ...grpc.CallOption) (*AccessCheckResponse, error)
+	OpenDoor(ctx context.Context, in *OpenDoorRequest, opts ...grpc.CallOption) (*OpenDoorResponse, error)
 }
 
 type doormanClient struct {
@@ -39,17 +39,17 @@ func NewDoormanClient(cc grpc.ClientConnInterface) DoormanClient {
 	return &doormanClient{cc}
 }
 
-func (c *doormanClient) CheckPermissions(ctx context.Context, in *Challenge, opts ...grpc.CallOption) (*OfficePermission, error) {
-	out := new(OfficePermission)
-	err := c.cc.Invoke(ctx, Doorman_CheckPermissions_FullMethodName, in, out, opts...)
+func (c *doormanClient) CheckAccess(ctx context.Context, in *AccessCheckRequest, opts ...grpc.CallOption) (*AccessCheckResponse, error) {
+	out := new(AccessCheckResponse)
+	err := c.cc.Invoke(ctx, Doorman_CheckAccess_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *doormanClient) OpenDoor(ctx context.Context, in *Challenge, opts ...grpc.CallOption) (*DoorState, error) {
-	out := new(DoorState)
+func (c *doormanClient) OpenDoor(ctx context.Context, in *OpenDoorRequest, opts ...grpc.CallOption) (*OpenDoorResponse, error) {
+	out := new(OpenDoorResponse)
 	err := c.cc.Invoke(ctx, Doorman_OpenDoor_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -61,8 +61,8 @@ func (c *doormanClient) OpenDoor(ctx context.Context, in *Challenge, opts ...grp
 // All implementations must embed UnimplementedDoormanServer
 // for forward compatibility
 type DoormanServer interface {
-	CheckPermissions(context.Context, *Challenge) (*OfficePermission, error)
-	OpenDoor(context.Context, *Challenge) (*DoorState, error)
+	CheckAccess(context.Context, *AccessCheckRequest) (*AccessCheckResponse, error)
+	OpenDoor(context.Context, *OpenDoorRequest) (*OpenDoorResponse, error)
 	mustEmbedUnimplementedDoormanServer()
 }
 
@@ -70,10 +70,10 @@ type DoormanServer interface {
 type UnimplementedDoormanServer struct {
 }
 
-func (UnimplementedDoormanServer) CheckPermissions(context.Context, *Challenge) (*OfficePermission, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CheckPermissions not implemented")
+func (UnimplementedDoormanServer) CheckAccess(context.Context, *AccessCheckRequest) (*AccessCheckResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CheckAccess not implemented")
 }
-func (UnimplementedDoormanServer) OpenDoor(context.Context, *Challenge) (*DoorState, error) {
+func (UnimplementedDoormanServer) OpenDoor(context.Context, *OpenDoorRequest) (*OpenDoorResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method OpenDoor not implemented")
 }
 func (UnimplementedDoormanServer) mustEmbedUnimplementedDoormanServer() {}
@@ -89,26 +89,26 @@ func RegisterDoormanServer(s grpc.ServiceRegistrar, srv DoormanServer) {
 	s.RegisterService(&Doorman_ServiceDesc, srv)
 }
 
-func _Doorman_CheckPermissions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Challenge)
+func _Doorman_CheckAccess_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AccessCheckRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DoormanServer).CheckPermissions(ctx, in)
+		return srv.(DoormanServer).CheckAccess(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Doorman_CheckPermissions_FullMethodName,
+		FullMethod: Doorman_CheckAccess_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DoormanServer).CheckPermissions(ctx, req.(*Challenge))
+		return srv.(DoormanServer).CheckAccess(ctx, req.(*AccessCheckRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _Doorman_OpenDoor_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Challenge)
+	in := new(OpenDoorRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -120,7 +120,7 @@ func _Doorman_OpenDoor_Handler(srv interface{}, ctx context.Context, dec func(in
 		FullMethod: Doorman_OpenDoor_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DoormanServer).OpenDoor(ctx, req.(*Challenge))
+		return srv.(DoormanServer).OpenDoor(ctx, req.(*OpenDoorRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -133,8 +133,8 @@ var Doorman_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*DoormanServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "CheckPermissions",
-			Handler:    _Doorman_CheckPermissions_Handler,
+			MethodName: "CheckAccess",
+			Handler:    _Doorman_CheckAccess_Handler,
 		},
 		{
 			MethodName: "OpenDoor",
