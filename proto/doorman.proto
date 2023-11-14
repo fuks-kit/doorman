@@ -7,21 +7,25 @@ option go_package = "./proto";
 package endpoints.doorman.v2;
 
 service Doorman {
-  rpc CheckPermissions(Challenge) returns (OfficePermission);
-  rpc OpenDoor(Challenge) returns (DoorState);
+  rpc CheckAccess(AccessCheckRequest) returns (AccessCheckResponse);
+  rpc OpenDoor(OpenDoorRequest) returns (OpenDoorResponse);
 }
 
-message Challenge {
-  string id = 1;
+message AccessCheckRequest {
+  string challenge = 1;
 }
 
-message OfficePermission {
+message OpenDoorRequest {
+  string challenge = 1;
+}
+
+message AccessCheckResponse {
   bool has_access = 1;
-  bool is_fuks_member = 2;
+  bool is_fuks = 2;
   bool is_active_fuks = 3;
 }
 
-message DoorState {
+message OpenDoorResponse {
   bool open = 1;
   google.protobuf.Duration open_duration = 2;
 }
