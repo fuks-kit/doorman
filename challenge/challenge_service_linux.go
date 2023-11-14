@@ -15,10 +15,15 @@ var (
 
 var adapter = bluetooth.DefaultAdapter
 
-func createChallenge() (uuid, error) {
+// Create a challenge that starts with 4deb699e and is 16 bytes long
+func createChallenge() (uuid.UUID, error) {
 	challenge := make([]byte, 16)
+
+	// Ensure that the uuid starts with 4deb699e
 	copy(challenge, challengePrefix)
-	_, err = rand.Read(challenge[4:])
+
+	// Generate the rest of the challenge with crypto/rand
+	_, err := rand.Read(challenge[4:])
 	if err != nil {
 		return uuid.Nil, err
 	}
