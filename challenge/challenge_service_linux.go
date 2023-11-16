@@ -48,7 +48,7 @@ func StartService() error {
 				log.Fatal(err)
 			}
 
-			log.Printf("challenge: %s", challenge)
+			// log.Printf("challenge: %s", challenge)
 
 			err = advertisement.Configure(bluetooth.AdvertisementOptions{
 				LocalName: "Doorman Nearby Challenge",
