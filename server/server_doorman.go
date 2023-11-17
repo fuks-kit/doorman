@@ -20,8 +20,6 @@ func NewDoormanServer() *DoormanServer {
 }
 
 func (server *DoormanServer) CheckAccess(ctx context.Context, req *pb.AccessCheckRequest) (*pb.AccessCheckResponse, error) {
-	log.Printf("CheckAccess: challenge=%v", req.Challenge)
-
 	if ok := challenge.Validate(req.Challenge); !ok {
 		return nil, fmt.Errorf("invalid challenge")
 	}
@@ -40,8 +38,6 @@ func (server *DoormanServer) CheckAccess(ctx context.Context, req *pb.AccessChec
 }
 
 func (server *DoormanServer) OpenDoor(ctx context.Context, req *pb.DoorOpenRequest) (*pb.DoorOpenResponse, error) {
-	log.Printf("OpenDoor: challenge=%v", req.Challenge)
-
 	if ok := challenge.Validate(req.Challenge); !ok {
 		return nil, fmt.Errorf("invalid challenge")
 	}
