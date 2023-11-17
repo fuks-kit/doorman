@@ -1,24 +1,31 @@
 syntax = "proto3";
 
-import "google/protobuf/empty.proto";
 import "google/protobuf/duration.proto";
 
 option go_package = "./proto";
 
-package endpoints.doorman;
+package endpoints.doorman.v2;
 
 service Doorman {
-  rpc CheckPermissions(google.protobuf.Empty) returns (OfficePermission);
-  rpc OpenDoor(google.protobuf.Empty) returns (DoorState);
+  rpc CheckAccess(AccessCheckRequest) returns (AccessCheckResponse);
+  rpc OpenDoor(DoorOpenRequest) returns (DoorOpenResponse);
 }
 
-message OfficePermission {
+message AccessCheckRequest {
+  string challenge = 1;
+}
+
+message DoorOpenRequest {
+  string challenge = 1;
+}
+
+message AccessCheckResponse {
   bool has_access = 1;
-  bool is_fuks_member = 2;
+  bool is_fuks = 2;
   bool is_active_fuks = 3;
 }
 
-message DoorState {
+message DoorOpenResponse {
   bool open = 1;
   google.protobuf.Duration open_duration = 2;
 }

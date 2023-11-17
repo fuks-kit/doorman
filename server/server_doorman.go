@@ -3,10 +3,10 @@ package server
 import (
 	"context"
 	"fmt"
+	"github.com/fuks-kit/doorman/challenge"
 	"github.com/fuks-kit/doorman/door"
 	pb "github.com/fuks-kit/doorman/proto"
 	"google.golang.org/protobuf/types/known/durationpb"
-	"google.golang.org/protobuf/types/known/emptypb"
 	"log"
 	"time"
 )
@@ -19,26 +19,28 @@ func NewDoormanServer() *DoormanServer {
 	return &DoormanServer{}
 }
 
-func (server *DoormanServer) CheckPermissions(ctx context.Context, _ *emptypb.Empty) (*pb.OfficePermission, error) {
-	log.Printf("CheckPermissions:")
+func (server *DoormanServer) CheckAccess(ctx context.Context, req *pb.AccessCheckRequest) (*pb.AccessCheckResponse, error) {
+	if ok := challenge.Validate(req.Challenge); !ok {
+		return nil, fmt.Errorf("invalid challenge")
+	}
 
-	start := time.Now()
 	permission, err := verifyPermission(ctx)
 	if err != nil {
 		log.Printf("Error: %v", err)
 		return nil, err
 	}
-	log.Printf("CheckPermissions: took %s", time.Since(start))
 
-	return &pb.OfficePermission{
+	return &pb.AccessCheckResponse{
 		HasAccess:    permission.HasAccess,
-		IsFuksMember: permission.IsFuksMember,
+		IsFuks:       permission.IsFuksMember,
 		IsActiveFuks: permission.IsActiveFuks,
 	}, nil
 }
 
-func (server *DoormanServer) OpenDoor(ctx context.Context, _ *emptypb.Empty) (*pb.DoorState, error) {
-	log.Printf("OpenDoor:")
+func (server *DoormanServer) OpenDoor(ctx context.Context, req *pb.DoorOpenRequest) (*pb.DoorOpenResponse, error) {
+	if ok := challenge.Validate(req.Challenge); !ok {
+		return nil, fmt.Errorf("invalid challenge")
+	}
 
 	permission, err := verifyPermission(ctx)
 	if err != nil {
@@ -50,7 +52,7 @@ func (server *DoormanServer) OpenDoor(ctx context.Context, _ *emptypb.Empty) (*p
 		return nil, fmt.Errorf("permission denied")
 	}
 
-	accessDuration := time.Second * 5
+	accessDuration := time.Second * 4
 
 	err = door.Open(accessDuration)
 	if err != nil {
@@ -58,7 +60,7 @@ func (server *DoormanServer) OpenDoor(ctx context.Context, _ *emptypb.Empty) (*p
 		return nil, err
 	}
 
-	return &pb.DoorState{
+	return &pb.DoorOpenResponse{
 		Open:         true,
 		OpenDuration: durationpb.New(accessDuration),
 	}, nil

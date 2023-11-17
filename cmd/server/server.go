@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"github.com/fuks-kit/doorman/certificate"
+	"github.com/fuks-kit/doorman/challenge"
 	pb "github.com/fuks-kit/doorman/proto"
 	"github.com/fuks-kit/doorman/server"
 	"google.golang.org/grpc"
@@ -17,6 +18,11 @@ var (
 func init() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 	flag.Parse()
+
+	err := challenge.StartService()
+	if err != nil {
+		log.Fatalf("Cloudn't start challenge service: %v", err)
+	}
 }
 
 func main() {

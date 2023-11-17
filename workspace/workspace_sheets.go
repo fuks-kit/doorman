@@ -8,7 +8,7 @@ import (
 
 const (
 	sheetId   = "1eNZxLDzBPZDZ5JKI47ZoUlw8pB6C--7MQiRBxspO4EI"
-	appSheet  = "fuks APP (BETA)"
+	appSheet  = "App-Users"
 	cardSheet = "KIT-Cards"
 )
 
