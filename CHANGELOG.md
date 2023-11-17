@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+### Changed
+
+- Set open door time to 4 seconds
+
 ### Fix
 
 - Fix door cmd bug that caused the door to open and close immediately
