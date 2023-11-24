@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Implemented access log for fuks app
 
+### Changed
+
+- Changed server port from 50051 to 44888
+
 ## [2.0.0]
 
 ### Changed
