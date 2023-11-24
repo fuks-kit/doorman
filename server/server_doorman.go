@@ -52,7 +52,7 @@ func (server *DoormanServer) OpenDoor(ctx context.Context, req *pb.DoorOpenReque
 		return nil, fmt.Errorf("permission denied")
 	}
 
-	log.Printf("Opening door for uid=%s name=%s email=%s", user.UID, user.Name, user.EMail)
+	log.Printf("Opening door: uid=%s name=%s email=%s", user.UID, user.Name, user.EMail)
 
 	accessDuration := time.Second * 4
 
