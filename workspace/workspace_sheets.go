@@ -80,7 +80,7 @@ func GetAuthChipNumbersFromSheet() (users []AuthorisedUser, _ error) {
 	return
 }
 
-func GetAuthUserFromSheet() (users []SheetAppUser, _ error) {
+func GetAuthUserFromSheet() (users []*SheetAppUser, _ error) {
 	readRange := appSheet + "!A2:C"
 
 	resp, err := sheetsService.
@@ -114,7 +114,7 @@ func GetAuthUserFromSheet() (users []SheetAppUser, _ error) {
 			continue
 		}
 
-		authUser := SheetAppUser{
+		authUser := &SheetAppUser{
 			Name:         name,
 			UserId:       userId,
 			Organization: org,

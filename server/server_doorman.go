@@ -24,16 +24,16 @@ func (server *DoormanServer) CheckAccess(ctx context.Context, req *pb.AccessChec
 		return nil, fmt.Errorf("invalid challenge")
 	}
 
-	permission, err := verifyPermission(ctx)
+	user, err := verifyUser(ctx)
 	if err != nil {
 		log.Printf("Error: %v", err)
 		return nil, err
 	}
 
 	return &pb.AccessCheckResponse{
-		HasAccess:    permission.HasAccess,
-		IsFuks:       permission.IsFuksMember,
-		IsActiveFuks: permission.IsActiveFuks,
+		HasAccess:    user.HasAccess,
+		IsFuks:       user.IsFuksMember,
+		IsActiveFuks: user.IsActiveFuks,
 	}, nil
 }
 
@@ -42,15 +42,17 @@ func (server *DoormanServer) OpenDoor(ctx context.Context, req *pb.DoorOpenReque
 		return nil, fmt.Errorf("invalid challenge")
 	}
 
-	permission, err := verifyPermission(ctx)
+	user, err := verifyUser(ctx)
 	if err != nil {
 		log.Printf("Error: %v", err)
 		return nil, err
 	}
 
-	if !permission.HasAccess {
+	if !user.HasAccess {
 		return nil, fmt.Errorf("permission denied")
 	}
+
+	log.Printf("Opening door for uid=%s name=%s email=%s", user.UID, user.Name, user.EMail)
 
 	accessDuration := time.Second * 4
 

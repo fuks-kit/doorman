@@ -4,26 +4,26 @@ import "time"
 
 const cacheDuration = time.Minute * 15
 
-var authUsers map[string]SheetAppUser
+var authUsers map[string]*SheetAppUser
 var lastFetchTime time.Time
 
-func GetAuthUserFromSheetCache(userId string) (access bool, _ error) {
+func GetAuthUserFromSheetCache(userId string) (*SheetAppUser, bool, error) {
 	if !lastFetchTime.IsZero() && time.Since(lastFetchTime) < cacheDuration {
-		_, access = authUsers[userId]
-		return
+		user, found := authUsers[userId]
+		return user, found, nil
 	}
 
 	users, err := GetAuthUserFromSheet()
 	if err != nil {
-		return false, err
+		return nil, false, err
 	}
 
-	authUsers = make(map[string]SheetAppUser)
+	authUsers = make(map[string]*SheetAppUser)
 	for _, user := range users {
 		authUsers[user.UserId] = user
 	}
 	lastFetchTime = time.Now()
 
-	_, access = authUsers[userId]
-	return
+	user, found := authUsers[userId]
+	return user, found, nil
 }

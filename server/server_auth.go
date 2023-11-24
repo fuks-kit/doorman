@@ -33,7 +33,7 @@ func verifyToken(ctx context.Context) (token *auth.Token, err error) {
 	return authClient.VerifyIDToken(ctx, bearer)
 }
 
-func verifyPermission(ctx context.Context) (permission *workspace.OfficePermission, _ error) {
+func verifyUser(ctx context.Context) (permission *workspace.OfficePermission, _ error) {
 	token, err := verifyToken(ctx)
 	if err != nil {
 		return nil, err
