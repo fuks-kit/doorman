@@ -8,7 +8,7 @@ var authUsers map[string]*SheetAppUser
 var lastFetchTime time.Time
 
 func GetAuthUserFromSheetCache(userId string) (*SheetAppUser, bool, error) {
-	if !lastFetchTime.IsZero() && time.Since(lastFetchTime) < cacheDuration {
+	if time.Since(lastFetchTime) < cacheDuration {
 		user, found := authUsers[userId]
 		return user, found, nil
 	}
