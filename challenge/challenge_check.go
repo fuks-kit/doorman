@@ -1,6 +1,9 @@
 package challenge
 
-import "sync"
+import (
+	"crypto/subtle"
+	"sync"
+)
 
 var (
 	lock             sync.RWMutex
@@ -20,5 +23,6 @@ func Validate(challenge string) bool {
 	lock.RLock()
 	defer lock.RUnlock()
 
-	return challenge == currentChallenge || lastChallenge == challenge
+	return subtle.ConstantTimeCompare([]byte(challenge), []byte(currentChallenge)) > 0 ||
+		subtle.ConstantTimeCompare([]byte(challenge), []byte(lastChallenge)) > 0
 }
