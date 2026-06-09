@@ -2,17 +2,22 @@ package challenge
 
 import (
 	"crypto/rand"
+	"github.com/godbus/dbus/v5/prop"
 	"github.com/google/uuid"
 	"log"
 	"os/exec"
+	"reflect"
 	"time"
 	"tinygo.org/x/bluetooth"
+	"unsafe"
 )
 
 var (
 	challengePrefix = []byte{0x4d, 0xeb, 0x69, 0x9e}
 	refreshInterval = time.Second * 30
 )
+
+const advertisementInterface = "org.bluez.LEAdvertisement1"
 
 var adapter = bluetooth.DefaultAdapter
 
@@ -30,6 +35,28 @@ func createChallenge() (uuid.UUID, error) {
 	}
 
 	return uuid.FromBytes(challenge)
+}
+
+func advertisementProperties(advertisement *bluetooth.Advertisement) *prop.Properties {
+	value := reflect.ValueOf(advertisement).Elem().FieldByName("properties")
+	return *(**prop.Properties)(unsafe.Pointer(value.UnsafeAddr()))
+}
+
+func setAdvertisedChallenge(advertisement *bluetooth.Advertisement, challenge uuid.UUID) error {
+	serviceUUIDs := []string{bluetooth.NewUUID(challenge).String()}
+	properties := advertisementProperties(advertisement)
+	if properties == nil {
+		return advertisement.Configure(bluetooth.AdvertisementOptions{
+			LocalName: "Doorman Nearby Challenge",
+			ServiceUUIDs: []bluetooth.UUID{
+				// Use the challenge as the service UUID, this is what the client will see
+				bluetooth.NewUUID(challenge),
+			},
+		})
+	}
+
+	properties.SetMust(advertisementInterface, "ServiceUUIDs", serviceUUIDs)
+	return nil
 }
 
 // StartService starts the challenge BLE service
@@ -52,13 +79,7 @@ func StartService() error {
 				log.Fatal(err)
 			}
 
-			err = advertisement.Configure(bluetooth.AdvertisementOptions{
-				LocalName: "Doorman Nearby Challenge",
-				ServiceUUIDs: []bluetooth.UUID{
-					// Use the challenge as the service UUID, this is what the client will see
-					bluetooth.NewUUID(challenge),
-				},
-			})
+			err = setAdvertisedChallenge(advertisement, challenge)
 			if err != nil {
 				log.Fatal(err)
 			}
