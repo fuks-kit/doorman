@@ -5,7 +5,6 @@ import (
 	"fmt"
 	admin "google.golang.org/api/admin/directory/v1"
 	"log"
-	"strconv"
 )
 
 type customArguments struct {
@@ -93,7 +92,7 @@ func GetAuthorisedFuksUsers() (authUsers []AuthorisedUser, _ error) {
 				continue
 			}
 
-			chipNumber, err := strconv.ParseUint(customArgs.ChipNumber, 10, 64)
+			chipNumber, err := parseChipNumber(customArgs.ChipNumber)
 			if err != nil {
 				log.Printf("Couldn't parse '%s' to uint64: user.PrimaryEmail=%s",
 					customArgs.ChipNumber, user.PrimaryEmail)
