@@ -44,28 +44,28 @@ func StartService() error {
 
 	advertisement := adapter.DefaultAdvertisement()
 
-	challenge, err := createChallenge()
-	if err != nil {
-		return err
-	}
-
-	err = advertisement.Configure(bluetooth.AdvertisementOptions{
-		LocalName: "Doorman Nearby Challenge",
-		ServiceUUIDs: []bluetooth.UUID{
-			// Use the challenge as the service UUID, this is what the client will see
-			bluetooth.NewUUID(challenge),
-		},
-	})
-	if err != nil {
-		return err
-	}
-
-	// Update validation data.
-	update(challenge.String())
-
-	// Restart advertising every 30 seconds and refresh the validation challenge.
+	// Restart advertising every 30 seconds and refresh the advertised challenge.
 	go func() {
 		for {
+			challenge, err := createChallenge()
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			err = advertisement.Configure(bluetooth.AdvertisementOptions{
+				LocalName: "Doorman Nearby Challenge",
+				ServiceUUIDs: []bluetooth.UUID{
+					// Use the challenge as the service UUID, this is what the client will see
+					bluetooth.NewUUID(challenge),
+				},
+			})
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			// Update validation data.
+			update(challenge.String())
+
 			err = advertisement.Start()
 			if err != nil {
 				log.Fatal(err)
@@ -77,12 +77,6 @@ func StartService() error {
 			if err != nil {
 				log.Fatal(err)
 			}
-
-			challenge, err := createChallenge()
-			if err != nil {
-				log.Fatal(err)
-			}
-			update(challenge.String())
 		}
 	}()
 
