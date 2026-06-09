@@ -2,7 +2,6 @@ package workspace
 
 import (
 	"fmt"
-	"strconv"
 	"strings"
 )
 
@@ -43,7 +42,7 @@ func GetAuthChipNumbersFromSheet() (users []AuthorisedUser, _ error) {
 			continue
 		}
 
-		chipNumber, err := strconv.ParseUint(chipNumStr, 10, 64)
+		chipNumber, err := parseChipNumber(chipNumStr)
 		if err != nil {
 			continue
 		}
