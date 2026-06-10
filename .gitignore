@@ -28,9 +28,6 @@ bin/
 
 cmd/debug/debug.go
 
-# go.sum file differ for each platform, os and arch
-go.sum
-
 doorman-recovery.json
 .idea/workspace.xml
 .DS_Store
